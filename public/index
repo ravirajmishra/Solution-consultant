@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OptiCore — Enterprise Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:linear-gradient(145deg,#eef2ff 0%,#f8faff 45%,#f3eeff 100%);
+  --gl:rgba(255,255,255,0.72);--gls:rgba(255,255,255,0.88);--gb:rgba(255,255,255,0.95);
+  --gs:0 8px 40px rgba(99,102,241,.10),0 2px 8px rgba(99,102,241,.06);
+  --gsl:0 20px 60px rgba(99,102,241,.13),0 4px 16px rgba(99,102,241,.07);
+  --blur:blur(24px);
+  --ac:#6366f1;--acl:rgba(99,102,241,.10);--acm:rgba(99,102,241,.18);
+  --tx:#1a1a2e;--tx2:#5b5b7e;--tx3:#9494b0;
+  --gr:#059669;--grb:rgba(5,150,105,.08);
+  --am:#d97706;--amb:rgba(217,119,6,.08);
+  --rd:#dc2626;--rdb:rgba(220,38,38,.08);
+  --bl:#2563eb;--blb:rgba(37,99,235,.08);
+  --pu:#7c3aed;--pub:rgba(124,58,237,.08);
+  --tl:#0d9488;--tlb:rgba(13,148,136,.08);
+  --pill:999px;--r:20px;--rs:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);background-attachment:fixed;color:var(--tx);font-size:14px;line-height:1.6;min-height:100vh;}
+body::before{content:'';position:fixed;top:-30%;right:-15%;width:70vw;height:70vw;background:radial-gradient(circle,rgba(99,102,241,.07),transparent 65%);pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;bottom:-20%;left:-10%;width:55vw;height:55vw;background:radial-gradient(circle,rgba(139,92,246,.06),transparent 65%);pointer-events:none;z-index:0;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-thumb{background:rgba(99,102,241,.2);border-radius:3px;}
+
+/* glass helpers */
+.g{background:var(--gl);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);box-shadow:var(--gs);border-radius:var(--r);}
+.gs{background:var(--gls);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);box-shadow:var(--gs);border-radius:var(--r);}
+
+/* ─── shared form controls ─── */
+.fi{width:100%;background:rgba(255,255,255,.85);border:1.5px solid rgba(99,102,241,.2);color:var(--tx);padding:12px 16px;border-radius:var(--pill);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;}
+.fi:focus{border-color:var(--ac);box-shadow:0 0 0 4px var(--acl);}
+.fi-ta{width:100%;background:rgba(255,255,255,.85);border:1.5px solid rgba(99,102,241,.2);color:var(--tx);padding:12px 16px;border-radius:16px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:88px;transition:border-color .2s,box-shadow .2s;}
+.fi-ta:focus{border-color:var(--ac);box-shadow:0 0 0 4px var(--acl);}
+.fi-sel{width:100%;background:rgba(255,255,255,.85);border:1.5px solid rgba(99,102,241,.2);color:var(--tx);padding:12px 16px;border-radius:var(--pill);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236366f1' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;cursor:pointer;transition:border-color .2s;}
+.fi-sel:focus{border-color:var(--ac);}
+.fl{font-size:12px;font-weight:500;color:var(--tx2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;display:block;}
+.fg{margin-bottom:18px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn{width:100%;background:var(--ac);color:#fff;border:none;padding:14px;font-size:15px;font-weight:600;border-radius:var(--pill);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.btn:hover{background:#4f46e5;transform:translateY(-1px);box-shadow:0 8px 24px rgba(99,102,241,.3);}
+.btn-sm{background:rgba(255,255,255,.8);color:var(--tx);border:1.5px solid rgba(99,102,241,.2);padding:8px 20px;font-size:13px;font-weight:500;border-radius:var(--pill);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-sm:hover{border-color:var(--ac);color:var(--ac);}
+.btn-n{background:var(--ac);color:#fff;border:none;padding:12px 36px;font-size:14px;font-weight:600;border-radius:var(--pill);cursor:pointer;margin-top:28px;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.btn-n:hover{background:#4f46e5;box-shadow:0 6px 20px rgba(99,102,241,.3);}
+
+/* ─── LANDING ─── */
+#landing{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;position:relative;z-index:1;text-align:center;}
+.lbadge{background:var(--acl);color:var(--ac);border:1px solid var(--acm);font-size:12px;font-weight:500;padding:6px 18px;border-radius:var(--pill);margin-bottom:28px;letter-spacing:.5px;}
+.lt{font-family:'DM Serif Display',serif;font-size:52px;line-height:1.15;max-width:700px;margin-bottom:20px;letter-spacing:-1px;}
+.lt em{color:var(--ac);font-style:normal;}
+.ls{font-size:17px;color:var(--tx2);max-width:500px;line-height:1.75;margin-bottom:44px;}
+.sbar{display:flex;background:var(--gl);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);border-radius:var(--pill);box-shadow:var(--gs);margin-bottom:40px;overflow:hidden;}
+.stat{padding:16px 32px;text-align:center;border-right:1px solid rgba(99,102,241,.12);}
+.stat:last-child{border-right:none;}
+.sn{font-family:'DM Serif Display',serif;font-size:26px;color:var(--ac);}
+.sl{font-size:11px;color:var(--tx3);letter-spacing:.5px;margin-top:2px;}
+.lcta{background:var(--ac);color:#fff;border:none;padding:16px 48px;font-size:16px;font-weight:600;border-radius:var(--pill);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;box-shadow:0 8px 32px rgba(99,102,241,.3);letter-spacing:.3px;margin-bottom:56px;}
+.lcta:hover{background:#4f46e5;transform:translateY(-2px);box-shadow:0 12px 40px rgba(99,102,241,.4);}
+.itags{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:680px;}
+.itag{background:var(--gl);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(99,102,241,.15);color:var(--tx2);font-size:12px;padding:6px 16px;border-radius:var(--pill);}
+
+/* ─── WIZARD ─── */
+#wizard{display:none;min-height:100vh;padding:32px 20px;max-width:760px;margin:0 auto;position:relative;z-index:1;}
+.wh{display:flex;align-items:center;gap:16px;margin-bottom:48px;}
+.wb{background:var(--gl);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);color:var(--tx2);padding:8px 18px;border-radius:var(--pill);cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.wb:hover{color:var(--ac);border-color:rgba(99,102,241,.4);}
+.spills{display:flex;gap:6px;}
+.sp{height:6px;border-radius:var(--pill);background:rgba(99,102,241,.15);transition:all .3s;width:16px;}
+.sp.active{background:var(--ac);width:28px;}
+.sp.done{background:rgba(99,102,241,.4);}
+.wlbl{margin-left:auto;font-size:12px;color:var(--tx3);font-weight:500;}
+.step{display:none;}.step.active{display:block;}
+.ey{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--ac);font-weight:600;margin-bottom:10px;}
+.stt{font-family:'DM Serif Display',serif;font-size:32px;margin-bottom:8px;line-height:1.2;}
+.ss{color:var(--tx2);font-size:14px;margin-bottom:36px;line-height:1.7;}
+
+.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:32px;}
+.ic{background:var(--gl);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1.5px solid transparent;border-radius:var(--rs);padding:18px 16px;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px rgba(99,102,241,.06);}
+.ic:hover{border-color:rgba(99,102,241,.3);box-shadow:var(--gs);}
+.ic.sel{border-color:var(--ac);background:rgba(99,102,241,.07);box-shadow:0 0 0 4px rgba(99,102,241,.08);}
+.ii{font-size:24px;margin-bottom:8px;}.in{font-size:13px;font-weight:600;margin-bottom:2px;}.isb{font-size:11px;color:var(--tx3);}
+
+.bg2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.bc{background:var(--gl);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1.5px solid transparent;border-radius:var(--rs);padding:18px 20px;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px rgba(99,102,241,.06);}
+.bc:hover{border-color:rgba(99,102,241,.3);}
+.bc.sel{border-color:var(--ac);background:rgba(99,102,241,.07);}
+.ba{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ac);margin-bottom:4px;}
+.bt{font-size:12px;color:var(--tx3);}
+
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.pi{background:var(--gl);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1.5px solid transparent;border-radius:var(--rs);padding:11px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;font-size:13px;box-shadow:0 2px 8px rgba(99,102,241,.05);}
+.pi:hover{border-color:rgba(99,102,241,.3);}
+.pi.sel{border-color:var(--ac);background:rgba(99,102,241,.07);}
+.pchk{width:18px;height:18px;border-radius:6px;border:1.5px solid rgba(99,102,241,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;transition:all .2s;}
+.pi.sel .pchk{background:var(--ac);border-color:var(--ac);color:#fff;}
+.erbox{background:var(--rdb);border:1px solid rgba(220,38,38,.2);border-radius:var(--rs);padding:12px 16px;margin-top:16px;font-size:13px;color:var(--rd);}
+
+/* ─── PROCESSING ─── */
+#processing{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:32px;position:relative;z-index:1;}
+.pc{max-width:420px;width:100%;padding:40px;text-align:center;}
+.prw{position:relative;width:80px;height:80px;margin:0 auto 28px;}
+.prr{width:80px;height:80px;border-radius:50%;border:3px solid rgba(99,102,241,.15);border-top-color:var(--ac);animation:spin 1.1s linear infinite;}
+.pri{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;background:var(--acl);display:flex;align-items:center;justify-content:center;font-size:22px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.ptit{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:8px;}
+.psub{font-size:13px;color:var(--tx2);margin-bottom:28px;}
+.psteps{list-style:none;text-align:left;}
+.psteps li{font-size:13px;color:var(--tx3);padding:5px 0;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(99,102,241,.08);}
+.psteps li:last-child{border-bottom:none;}
+.psteps li.active{color:var(--ac);font-weight:500;}
+.psteps li.done{color:var(--gr);}
+.pdot{width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* ─── DASHBOARD ─── */
+#dashboard{display:none;position:relative;z-index:1;}
+.dn{background:var(--gls);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-bottom:1px solid var(--gb);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.dlogo{display:flex;align-items:center;gap:8px;}
+.dli{width:32px;height:32px;border-radius:10px;background:var(--ac);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;}
+.dln{font-family:'DM Serif Display',serif;font-size:18px;}
+.dln em{color:var(--ac);font-style:normal;}
+.dmeta{font-size:12px;color:var(--tx3);}
+.dbody{max-width:1140px;margin:0 auto;padding:32px 24px;}
+
+.sh{padding:36px 40px;margin-bottom:24px;background:linear-gradient(135deg,rgba(255,255,255,.85),rgba(240,240,255,.72));backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);box-shadow:var(--gsl);border-radius:var(--r);position:relative;overflow:hidden;}
+.sh::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.08),transparent 70%);}
+.br{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.bpill{font-size:11px;font-weight:500;padding:5px 14px;border-radius:var(--pill);border:1px solid;letter-spacing:.3px;}
+.bac{background:var(--acl);color:var(--ac);border-color:var(--acm);}
+.btc{background:var(--blb);color:var(--bl);border-color:rgba(37,99,235,.2);}
+.bop{background:var(--grb);color:var(--gr);border-color:rgba(5,150,105,.2);}
+.bhy{background:var(--pub);color:var(--pu);border-color:rgba(124,58,237,.2);}
+.ben{background:var(--tlb);color:var(--tl);border-color:rgba(13,148,136,.2);}
+.bnt{background:var(--amb);color:var(--am);border-color:rgba(217,119,6,.2);}
+.bin{background:rgba(91,91,126,.08);color:var(--tx2);border-color:rgba(91,91,126,.2);}
+.sht{font-family:'DM Serif Display',serif;font-size:30px;line-height:1.25;margin-bottom:12px;letter-spacing:-.3px;}
+.shd{font-size:15px;color:var(--tx2);line-height:1.75;max-width:740px;}
+
+.gr2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+.card{padding:24px;background:var(--gl);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);box-shadow:var(--gs);border-radius:var(--r);}
+.ch{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--tx3);font-weight:600;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;}
+.cdot{width:8px;height:8px;border-radius:50%;background:var(--ac);}
+
+.proofbox{border-left:3px solid var(--ac);padding:14px 16px;margin-bottom:12px;border-radius:0 var(--rs) var(--rs) 0;background:var(--acl);}
+.proofbox:last-child{margin-bottom:0;}
+.pco{font-weight:600;font-size:14px;margin-bottom:3px;}
+.pmeta{font-size:11px;color:var(--tx3);margin-bottom:8px;font-weight:500;}
+.ptxt{font-size:13px;color:var(--tx2);line-height:1.65;}
+.pnums{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;}
+.pnum{text-align:center;}
+.pnv{font-family:'DM Serif Display',serif;font-size:17px;color:var(--gr);}
+.pnl{font-size:10px;color:var(--tx3);letter-spacing:.5px;margin-top:1px;}
+
+.brow{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(99,102,241,.08);}
+.brow:last-child{border-bottom:none;}
+.bk{font-size:13px;color:var(--tx2);}
+.bv{font-weight:600;font-size:13px;color:var(--ac);text-align:right;max-width:200px;}
+.fnote{background:var(--acl);border-radius:var(--rs);padding:10px 14px;margin-top:14px;font-size:12px;color:var(--tx2);line-height:1.6;}
+
+.krow{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(99,102,241,.08);}
+.krow:last-child{border-bottom:none;}
+.karr{width:28px;height:28px;border-radius:var(--pill);background:var(--grb);color:var(--gr);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.crow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(99,102,241,.08);}
+.crow:last-child{border-bottom:none;}
+.spill{font-size:10px;font-weight:600;padding:4px 12px;border-radius:var(--pill);letter-spacing:.5px;}
+.sp-d{background:var(--grb);color:var(--gr);}
+.sp-e{background:var(--blb);color:var(--bl);}
+.sp-b{background:var(--rdb);color:var(--rd);}
+
+.ptabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+.ptab{background:var(--gl);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1.5px solid transparent;color:var(--tx2);padding:8px 20px;border-radius:var(--pill);cursor:pointer;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.ptab:hover{border-color:rgba(99,102,241,.3);color:var(--ac);}
+.ptab.active{background:var(--ac);color:#fff;border-color:var(--ac);box-shadow:0 4px 14px rgba(99,102,241,.3);}
+.ppanel{display:none;}.ppanel.active{display:block;}
+.phero{background:var(--gls);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);border-radius:var(--rs);padding:24px;margin-bottom:14px;}
+.prole{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--ac);font-weight:600;margin-bottom:6px;}
+.phl{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:10px;line-height:1.3;}
+.pmsg{font-size:14px;color:var(--tx2);line-height:1.75;}
+.mr{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;}
+.mbox{background:rgba(99,102,241,.06);border-radius:12px;padding:14px;}
+.mlbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin-bottom:6px;}
+.mv{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ac);}
+.mc{font-size:11px;color:var(--tx3);margin-top:3px;}
+.dpills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+.dpill{background:var(--acl);color:var(--tx);font-size:12px;padding:6px 14px;border-radius:var(--pill);border:1px solid var(--acm);}
+.ib{background:var(--acl);border:1px solid var(--acm);border-radius:var(--rs);padding:12px 16px;margin-top:12px;font-size:13px;color:var(--tx2);line-height:1.65;}
+.ib strong{color:var(--ac);}
+.wb2{background:var(--rdb);border:1px solid rgba(220,38,38,.2);border-radius:var(--rs);padding:12px 16px;margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.65;}
+.wb2 strong{color:var(--rd);}
+.lp{list-style:none;margin-top:10px;}
+.lp li{padding:7px 0;border-bottom:1px solid rgba(99,102,241,.08);font-size:13px;color:var(--tx2);display:flex;gap:10px;align-items:flex-start;}
+.lp li::before{content:'→';color:var(--ac);flex-shrink:0;}
+.lp li:last-child{border-bottom:none;}
+
+.rphase{display:flex;gap:16px;margin-bottom:18px;}
+.rl{display:flex;flex-direction:column;align-items:center;}
+.rdot{width:14px;height:14px;border-radius:50%;background:var(--ac);flex-shrink:0;box-shadow:0 0 0 4px rgba(99,102,241,.15);}
+.rline{width:2px;flex:1;background:linear-gradient(to bottom,rgba(99,102,241,.3),rgba(99,102,241,.05));margin-top:6px;}
+.rphase:last-child .rline{display:none;}
+.rcont{flex:1;padding-bottom:18px;}
+.rpl{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--ac);font-weight:600;margin-bottom:4px;}
+.rti{font-size:15px;font-weight:600;margin-bottom:4px;}
+.ra{font-size:13px;color:var(--tx2);line-height:1.7;}
+.rmil{display:inline-block;background:var(--grb);color:var(--gr);font-size:11px;font-weight:600;padding:4px 12px;border-radius:var(--pill);margin-top:8px;border:1px solid rgba(5,150,105,.2);}
+
+.srcrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px;padding:16px;background:rgba(99,102,241,.04);border-radius:var(--rs);border:1px dashed rgba(99,102,241,.15);}
+.srchip{font-size:11px;color:var(--tx3);padding:4px 10px;border-radius:var(--pill);background:rgba(255,255,255,.7);border:1px solid rgba(99,102,241,.12);}
+
+@media(max-width:680px){
+  .gr2{grid-template-columns:1fr;}
+  .ig{grid-template-columns:repeat(2,1fr);}
+  .mr{grid-template-columns:1fr 1fr;}
+  .lt{font-size:36px;}
+  .sbar{flex-direction:column;border-radius:var(--r);}
+  .stat{border-right:none;border-bottom:1px solid rgba(99,102,241,.12);}
+  .stat:last-child{border-bottom:none;}
+  .sh{padding:24px 20px;}
+  .fr{grid-template-columns:1fr;}
+  .dn{padding:12px 16px;}
+  .dbody{padding:20px 16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing">
+  <div class="lbadge">✦ Gemini 2.5 Flash · Live Google Search Grounding · Zero Hardcoded Data</div>
+  <h1 class="lt">The Enterprise Intelligence<br><em>Consultant That Never Sleeps</em></h1>
+  <p class="ls">Real solutions proven by companies like yours. Budget-constrained from day one. Delivered in the language of every person at your table.</p>
+  <div class="sbar">
+    <div class="stat"><div class="sn">Live</div><div class="sl">Web-grounded data</div></div>
+    <div class="stat"><div class="sn">24+</div><div class="sl">Industries</div></div>
+    <div class="stat"><div class="sn">8</div><div class="sl">Exec personas</div></div>
+    <div class="stat"><div class="sn">$0</div><div class="sl">Consultant fee</div></div>
+  </div>
+  <button class="lcta" onclick="startWiz()">Start Enterprise Analysis</button>
+  <div class="itags">
+    <span class="itag">⚙️ Manufacturing</span><span class="itag">🛢️ Oil & Gas</span>
+    <span class="itag">🏥 Healthcare</span><span class="itag">⚖️ Legal</span>
+    <span class="itag">📡 Telecom</span><span class="itag">☁️ Cloud / SaaS</span>
+    <span class="itag">⚡ Energy</span><span class="itag">🏦 Banking</span>
+    <span class="itag">🔩 Steel & Metals</span><span class="itag">🎮 Gaming</span>
+    <span class="itag">🚚 Logistics</span><span class="itag">🛒 Retail</span>
+    <span class="itag">💊 Pharma</span><span class="itag">🏗️ Construction</span>
+    <span class="itag">📚 Education</span><span class="itag">🏘️ Real Estate</span>
+  </div>
+</div>
+
+<!-- WIZARD -->
+<div id="wizard">
+  <div class="wh">
+    <button class="wb" onclick="goBack()">← Back</button>
+    <div class="spills">
+      <div class="sp active" id="sp1"></div><div class="sp" id="sp2"></div>
+      <div class="sp" id="sp3"></div><div class="sp" id="sp4"></div>
+    </div>
+    <div class="wlbl" id="wlbl">Step 1 of 4</div>
+  </div>
+
+  <!-- Step 1 - Industry -->
+  <div class="step active" id="s1">
+    <div class="ey">Step 1</div>
+    <div class="stt">What industry are you in?</div>
+    <div class="ss">OptiCore searches sector-specific deployments, vendors, and real ROI benchmarks for your exact industry.</div>
+    <div class="ig">
+      <div class="ic" onclick="selI(this,'Manufacturing')"><div class="ii">⚙️</div><div class="in">Manufacturing</div><div class="isb">Discrete & process</div></div>
+      <div class="ic" onclick="selI(this,'Oil & Gas')"><div class="ii">🛢️</div><div class="in">Oil & Gas</div><div class="isb">Upstream · midstream · downstream</div></div>
+      <div class="ic" onclick="selI(this,'Healthcare')"><div class="ii">🏥</div><div class="in">Healthcare</div><div class="isb">Hospitals · clinics · pharma</div></div>
+      <div class="ic" onclick="selI(this,'Legal')"><div class="ii">⚖️</div><div class="in">Legal</div><div class="isb">Law firms · in-house counsel</div></div>
+      <div class="ic" onclick="selI(this,'Telecom')"><div class="ii">📡</div><div class="in">Telecom</div><div class="isb">Operators · ISPs · MSOs</div></div>
+      <div class="ic" onclick="selI(this,'Cloud / SaaS')"><div class="ii">☁️</div><div class="in">Cloud / SaaS</div><div class="isb">Software & infrastructure</div></div>
+      <div class="ic" onclick="selI(this,'Electrical / Energy')"><div class="ii">⚡</div><div class="in">Electrical / Energy</div><div class="isb">Utilities · renewables · grid</div></div>
+      <div class="ic" onclick="selI(this,'Banking & Finance')"><div class="ii">🏦</div><div class="in">Banking & Finance</div><div class="isb">Retail · investment · insurance</div></div>
+      <div class="ic" onclick="selI(this,'Steel & Metals')"><div class="ii">🔩</div><div class="in">Steel & Metals</div><div class="isb">Primary & secondary production</div></div>
+      <div class="ic" onclick="selI(this,'Retail & E-Commerce')"><div class="ii">🛒</div><div class="in">Retail & E-Commerce</div><div class="isb">Omnichannel · DTC · marketplace</div></div>
+      <div class="ic" onclick="selI(this,'Logistics & Supply Chain')"><div class="ii">🚚</div><div class="in">Logistics & Supply Chain</div><div class="isb">3PL · freight · last-mile</div></div>
+      <div class="ic" onclick="selI(this,'Gaming')"><div class="ii">🎮</div><div class="in">Gaming</div><div class="isb">Mobile · PC · console</div></div>
+      <div class="ic" onclick="selI(this,'Pharma / Life Sciences')"><div class="ii">💊</div><div class="in">Pharma / Life Sciences</div><div class="isb">R&D · manufacturing · distribution</div></div>
+      <div class="ic" onclick="selI(this,'Construction')"><div class="ii">🏗️</div><div class="in">Construction</div><div class="isb">Infrastructure · real estate dev</div></div>
+      <div class="ic" onclick="selI(this,'Education')"><div class="ii">📚</div><div class="in">Education</div><div class="isb">K-12 · higher ed · edtech</div></div>
+      <div class="ic" onclick="selI(this,'Other')"><div class="ii">🏢</div><div class="in">Other</div><div class="isb">Describe below</div></div>
+    </div>
+    <div class="fg" id="oiw" style="display:none"><label class="fl">Describe your industry</label><input class="fi" id="otherI" placeholder="e.g. Insurance, Mining, Aerospace..."/></div>
+    <button class="btn-n" onclick="nxt(2)">Next: Company Profile →</button>
+  </div>
+
+  <!-- Step 2 - Company -->
+  <div class="step" id="s2">
+    <div class="ey">Step 2</div>
+    <div class="stt">Tell us about your company</div>
+    <div class="ss">Precise inputs unlock precise recommendations. OptiCore filters out solutions that don't fit your scale, region, or infrastructure.</div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Annual revenue (USD)</label>
+        <select class="fi-sel" id="rev"><option value="">Select...</option><option>Under $5M</option><option>$5M – $25M</option><option>$25M – $100M</option><option>$100M – $500M</option><option>$500M – $2B</option><option>$2B+</option></select></div>
+      <div class="fg"><label class="fl">Employees</label>
+        <select class="fi-sel" id="emp"><option value="">Select...</option><option>1–50</option><option>51–200</option><option>200–1,000</option><option>1,000–5,000</option><option>5,000–50,000</option><option>50,000+</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Geography / Market</label>
+        <select class="fi-sel" id="geo"><option value="">Select...</option><option>North America</option><option>Europe</option><option>Asia Pacific</option><option>India</option><option>Middle East</option><option>Latin America</option><option>Africa</option><option>Global</option></select></div>
+      <div class="fg"><label class="fl">Company type</label>
+        <select class="fi-sel" id="ctype"><option value="">Select...</option><option>Private company</option><option>Public listed</option><option>Family business</option><option>Government / PSU</option><option>Joint venture</option><option>Startup / Scale-up</option></select></div>
+    </div>
+    <div class="fg"><label class="fl">Existing core systems / technology</label><input class="fi" id="tech" placeholder="e.g. SAP ERP, legacy SCADA, Siemens S7 PLCs, Oracle, no formal ERP..."/></div>
+    <div class="fg"><label class="fl">Describe your primary challenge — be specific (drives accuracy)</label><textarea class="fi-ta" id="chall" placeholder="e.g. Our plant has 22% unplanned downtime costing $3M/yr. Equipment is 15 years old — we cannot replace hardware but need ROI within 12 months..."></textarea></div>
+    <button class="btn-n" onclick="nxt(3)">Next: Budget & Constraints →</button>
+  </div>
+
+  <!-- Step 3 - Budget -->
+  <div class="step" id="s3">
+    <div class="ey">Step 3</div>
+    <div class="stt">Budget & constraints</div>
+    <div class="ss">OptiCore is budget-first — it only surfaces solutions you can actually execute. No $5M prescriptions for a $100K problem.</div>
+    <div class="fg"><label class="fl">Available investment budget</label>
+      <div class="bg2">
+        <div class="bc" onclick="selB(this,'Under $50K')"><div class="ba">Under $50K</div><div class="bt">Tactical improvements only</div></div>
+        <div class="bc" onclick="selB(this,'$50K – $250K')"><div class="ba">$50K – $250K</div><div class="bt">Focused transformation</div></div>
+        <div class="bc" onclick="selB(this,'$250K – $1M')"><div class="ba">$250K – $1M</div><div class="bt">Significant program</div></div>
+        <div class="bc" onclick="selB(this,'$1M – $5M')"><div class="ba">$1M – $5M</div><div class="bt">Enterprise initiative</div></div>
+        <div class="bc" onclick="selB(this,'$5M – $20M')"><div class="ba">$5M – $20M</div><div class="bt">Major transformation</div></div>
+        <div class="bc" onclick="selB(this,'$20M+')"><div class="ba">$20M+</div><div class="bt">Full enterprise program</div></div>
+      </div>
+    </div>
+    <div class="fr" style="margin-top:20px">
+      <div class="fg"><label class="fl">Budget type</label>
+        <select class="fi-sel" id="btype"><option value="Prefer OpEx recurring">Prefer OpEx (recurring)</option><option value="Prefer CapEx one-time">Prefer CapEx (one-time)</option><option value="Flexible both OK">Flexible — both OK</option><option value="Phased approach preferred">Phased approach</option></select></div>
+      <div class="fg"><label class="fl">Expected timeline</label>
+        <select class="fi-sel" id="tline"><option value="Quick wins 0–3 months">Quick wins: 0–3 months</option><option value="Results 3–6 months">Results: 3–6 months</option><option value="6–12 month program">6–12 month program</option><option value="1–2 year transformation">1–2 year transformation</option><option value="Multi-year 3+">Multi-year (3+)</option></select></div>
+    </div>
+    <div class="fg"><label class="fl">Hard constraints — be specific (prevents irrelevant solutions)</label><textarea class="fi-ta" style="min-height:70px" id="constr" placeholder="e.g. Cannot replace PLCs. Must be on-premise. ISO 27001 required. Union workforce. HIPAA mandatory..."></textarea></div>
+    <button class="btn-n" onclick="nxt(4)">Next: Pain Points →</button>
+  </div>
+
+  <!-- Step 4 - Pain Points -->
+  <div class="step" id="s4">
+    <div class="ey">Step 4</div>
+    <div class="stt">What's hurting your business?</div>
+    <div class="ss">Select everything that applies. OptiCore prioritises the combination with the highest compounded ROI.</div>
+    <div class="pg">
+      <div class="pi" onclick="togP(this,'High operational costs')"><div class="pchk">✓</div>High operational costs</div>
+      <div class="pi" onclick="togP(this,'Equipment downtime and reliability')"><div class="pchk">✓</div>Equipment downtime & reliability</div>
+      <div class="pi" onclick="togP(this,'Poor data visibility and reporting')"><div class="pchk">✓</div>Poor data visibility & reporting</div>
+      <div class="pi" onclick="togP(this,'Manual labour-intensive processes')"><div class="pchk">✓</div>Manual / labour-intensive processes</div>
+      <div class="pi" onclick="togP(this,'Slow response to market changes')"><div class="pchk">✓</div>Slow response to market changes</div>
+      <div class="pi" onclick="togP(this,'Quality control defects and rework')"><div class="pchk">✓</div>Quality defects & rework</div>
+      <div class="pi" onclick="togP(this,'Supply chain inefficiency')"><div class="pchk">✓</div>Supply chain inefficiency</div>
+      <div class="pi" onclick="togP(this,'Customer churn and poor retention')"><div class="pchk">✓</div>Customer churn & poor retention</div>
+      <div class="pi" onclick="togP(this,'Compliance and regulatory exposure')"><div class="pchk">✓</div>Compliance & regulatory exposure</div>
+      <div class="pi" onclick="togP(this,'Scaling bottleneck')"><div class="pchk">✓</div>Scaling bottleneck</div>
+      <div class="pi" onclick="togP(this,'Talent and skills gap')"><div class="pchk">✓</div>Talent & skills gap</div>
+      <div class="pi" onclick="togP(this,'Losing market share to competitors')"><div class="pchk">✓</div>Losing market share</div>
+      <div class="pi" onclick="togP(this,'High energy and sustainability costs')"><div class="pchk">✓</div>High energy & sustainability costs</div>
+      <div class="pi" onclick="togP(this,'Cash flow and working capital pressure')"><div class="pchk">✓</div>Cash flow pressure</div>
+      <div class="pi" onclick="togP(this,'Long sales cycles')"><div class="pchk">✓</div>Long sales cycles</div>
+      <div class="pi" onclick="togP(this,'Cybersecurity and data risk')"><div class="pchk">✓</div>Cybersecurity & data risk</div>
+    </div>
+    <div class="erbox" id="erbox" style="display:none"></div>
+    <button class="btn-n" onclick="run()">Run OptiCore Analysis →</button>
+  </div>
+</div>
+
+<!-- PROCESSING -->
+<div id="processing">
+  <div class="g pc">
+    <div class="prw"><div class="prr"></div><div class="pri">🔍</div></div>
+    <div class="ptit" id="ptit">Researching Live Data</div>
+    <div class="psub" id="psub">Searching real deployments via Google Search grounding</div>
+    <ul class="psteps">
+      <li id="ps1"><span class="pdot"></span>Connecting to Google Search grounding...</li>
+      <li id="ps2"><span class="pdot"></span>Finding verified industry case studies...</li>
+      <li id="ps3"><span class="pdot"></span>Pulling competitor benchmark data...</li>
+      <li id="ps4"><span class="pdot"></span>Verifying ROI figures and vendor costs...</li>
+      <li id="ps5"><span class="pdot"></span>Building financial models (NPV, IRR, TCO)...</li>
+      <li id="ps6"><span class="pdot"></span>Structuring 8-persona executive report...</li>
+    </ul>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <nav class="dn">
+    <div class="dlogo"><div class="dli">OC</div><div class="dln">Opti<em>Core</em></div></div>
+    <div class="dmeta" id="dmeta"></div>
+    <button class="btn-sm" onclick="location.reload()">+ New Analysis</button>
+  </nav>
+  <div class="dbody">
+    <div class="sh"><div class="br" id="sbadges"></div><div class="sht" id="stitle">—</div><div class="shd" id="sdiag">—</div></div>
+    <div class="gr2">
+      <div class="card"><div class="ch">Real-world proof cases <span class="cdot"></span></div><div id="proofwrap"></div></div>
+      <div class="card"><div class="ch">Financial breakdown</div><div id="budwrap"></div></div>
+    </div>
+    <div class="gr2">
+      <div class="card"><div class="ch">Industry KPI targets</div><div id="kpiwrap"></div></div>
+      <div class="card"><div class="ch">Competitor landscape</div><div id="compwrap"></div></div>
+    </div>
+    <div class="card" style="margin-bottom:20px">
+      <div class="ch" style="margin-bottom:20px">Executive perspective — select your role</div>
+      <div class="ptabs" id="ptabs"></div>
+      <div id="ppanels"></div>
+    </div>
+    <div class="card"><div class="ch">Implementation roadmap</div><div id="rmwrap" style="margin-top:12px"></div></div>
+    <div class="srcrow" id="srcrow" style="display:none"><span style="font-size:11px;color:var(--tx3);font-style:italic;padding:4px 0">Research grounded in searches:</span></div>
+  </div>
+</div>
+
+<script>
+const D={ind:'',bud:'',pains:[],rev:'',emp:'',geo:'',ctype:'',tech:'',chall:'',btype:'',tline:'',constr:''};
+let cur=1;
+
+function show(id){
+  ['landing','wizard','processing','dashboard'].forEach(x=>{
+    const e=document.getElementById(x);if(!e)return;e.style.display='none';
+  });
+  const el=document.getElementById(id);if(!el)return;
+  el.style.display=(id==='processing')?'flex':'block';
+}
+window.addEventListener('load',()=>show('landing'));
+function startWiz(){show('wizard');setS(1);}
+function goBack(){cur===1?show('landing'):setS(cur-1);}
+function setS(n){
+  cur=n;
+  document.querySelectorAll('.step').forEach((s,i)=>s.classList.toggle('active',i+1===n));
+  for(let i=1;i<=4;i++){
+    const d=document.getElementById('sp'+i);if(!d)continue;
+    d.classList.remove('active','done');d.style.width='16px';
+    if(i<n)d.classList.add('done');
+    else if(i===n){d.classList.add('active');d.style.width='28px';}
+  }
+  document.getElementById('wlbl').textContent='Step '+n+' of 4';
+}
+function selI(el,v){document.querySelectorAll('.ic').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');D.ind=v;document.getElementById('oiw').style.display=v==='Other'?'block':'none';}
+function selB(el,v){document.querySelectorAll('.bc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');D.bud=v;}
+function togP(el,v){el.classList.toggle('sel');D.pains=D.pains.includes(v)?D.pains.filter(p=>p!==v):[...D.pains,v];}
+function nxt(n){
+  if(cur===1&&!D.ind){alert('Please select your industry.');return;}
+  if(cur===2){
+    D.rev=document.getElementById('rev').value;D.emp=document.getElementById('emp').value;
+    D.geo=document.getElementById('geo').value;D.ctype=document.getElementById('ctype').value;
+    D.tech=document.getElementById('tech').value;D.chall=document.getElementById('chall').value;
+    if(!D.rev||!D.emp){alert('Please fill in revenue and employee count.');return;}
+  }
+  if(cur===3){
+    D.btype=document.getElementById('btype').value;D.tline=document.getElementById('tline').value;
+    D.constr=document.getElementById('constr').value;
+    if(!D.bud){alert('Please select a budget range.');return;}
+  }
+  setS(n);
+}
+
+// All API calls go through /api/analyze — no CORS issues
+async function callAPI(type, prompt){
+  const r=await fetch('/api/analyze',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({type,payload:{prompt}})
+  });
+  if(!r.ok){const e=await r.json();throw new Error(e.error||'Server error '+r.status);}
+  return r.json();
+}
+
+async function run(){
+  D.pains=[...document.querySelectorAll('.pi.sel')].map(e=>e.textContent.trim());
+  if(!D.pains.length){const e=document.getElementById('erbox');e.style.display='block';e.textContent='Please select at least one pain point.';return;}
+  D.rev=document.getElementById('rev').value;D.emp=document.getElementById('emp').value;
+  D.geo=document.getElementById('geo').value;D.ctype=document.getElementById('ctype').value;
+  D.tech=document.getElementById('tech').value;D.chall=document.getElementById('chall').value;
+  D.btype=document.getElementById('btype').value;D.tline=document.getElementById('tline').value;
+  D.constr=document.getElementById('constr').value;
+  const ind=D.ind==='Other'?(document.getElementById('otherI').value||'Other'):D.ind;
+  show('processing');
+  const steps=['ps1','ps2','ps3','ps4','ps5','ps6'];let si=0;
+  const tick=()=>{if(si>0)document.getElementById(steps[si-1]).classList.add('done');if(si<steps.length){document.getElementById(steps[si]).classList.add('active');si++;setTimeout(tick,700+Math.random()*600);}};tick();
+
+  try{
+    document.getElementById('ptit').textContent='Searching Real-World Data';
+    const rp=`You are an enterprise business intelligence researcher with Google Search access.
+
+Research this company's situation and find real, verified information:
+
+COMPANY: ${ind} | Revenue: ${D.rev||'unknown'} | Employees: ${D.emp||'unknown'} | Region: ${D.geo||'unspecified'} | Type: ${D.ctype||'private'} | Existing tech: ${D.tech||'unspecified'} | Budget: ${D.bud} | Timeline: ${D.tline} | Constraints: ${D.constr||'none'} | Challenge: ${D.chall||'general efficiency'} | Pain points: ${D.pains.join(', ')}
+
+Search for each of these:
+1. REAL CASE STUDIES: Find 2-3 actual named companies in ${ind} that solved similar pain points. Include company name, vendor/technology used, investment amount, measured ROI, year of deployment. Look for press releases and vendor case study pages.
+2. INDUSTRY BENCHMARKS: Current ${ind} benchmarks from industry associations, consulting reports, or trade publications — efficiency rates, cost metrics, downtime rates.
+3. COMPETITORS: Which ${ind} companies recently deployed optimization initiatives, and what competitive advantage they gained.
+4. VENDOR PRICING: Actual pricing ranges for solutions within ${D.bud} budget for ${ind}.
+5. NON-TECH WINS: Documented cases where ${ind} companies achieved ROI through operational/process/training changes — not just technology.
+
+Be specific: real company names, real dollar figures, real percentages. Note if data is estimated.`;
+
+    const research=await callAPI('research',rp);
+
+    document.getElementById('ptit').textContent='Building Executive Report';
+    document.getElementById('psub').textContent='Structuring findings into 8-persona analysis';
+
+    const sp=`Based on this verified research about ${ind}:
+
+${research.text}
+
+COMPANY CONTEXT: Revenue ${D.rev} | Employees ${D.emp} | Region ${D.geo} | Budget ${D.bud} (${D.btype}) | Timeline ${D.tline} | Constraints: ${D.constr||'none'} | Existing tech: ${D.tech||'unspecified'} | Challenge: ${D.chall||'general'} | Pains: ${D.pains.join(', ')}
+
+Generate a comprehensive enterprise solution using the research above. Use real data found; supplement with known industry benchmarks where needed (label as "benchmark").
+
+Return a single JSON object with these exact keys:
+{
+  "solution_title": "string",
+  "solution_type": "Technical or Operational or Non-Technical or Environmental or Hybrid",
+  "problem_diagnosis": "string",
+  "proof_cases": [{"company":"string","industry":"string","year":"string","situation":"string","solution":"string","vendor":"string","investment":"string","outcome":"string","roi":"string","timeframe":"string"}],
+  "competitor_benchmark": [{"name":"string","status":"deployed or exploring or behind","detail":"string"}],
+  "budget": {"total_min":"string","total_max":"string","capex_portion":"string","opex_annual":"string","payback_months":18,"npv_3yr":"string","irr":"string","phase1_cost":"string","phase1_desc":"string","phase2_cost":"string","phase2_desc":"string","financing_note":"string"},
+  "kpis": [{"name":"string","before":"string","after":"string","unit":"string","benchmark":"string"}],
+  "personas": {
+    "ceo": {"headline":"string","key_message":"string","metrics":[{"label":"string","value":"string","context":"string"}],"board_narrative":"string","risk_of_inaction":"string"},
+    "cfo": {"headline":"string","key_message":"string","metrics":[{"label":"string","value":"string","context":"string"}],"financing_options":["string"],"tax_note":"string","risk_note":"string"},
+    "coo": {"headline":"string","key_message":"string","metrics":[{"label":"string","value":"string","context":"string"}],"process_changes":["string"],"headcount_impact":"string","complexity":"Low or Medium or High"},
+    "cto": {"headline":"string","key_message":"string","metrics":[{"label":"string","value":"string","context":"string"}],"tech_requirements":["string"],"integration_note":"string","build_buy":"string","risks":["string"]},
+    "cmo": {"headline":"string","key_message":"string","metrics":[{"label":"string","value":"string","context":"string"}],"customer_impact":"string","revenue_attribution":"string"},
+    "domain_expert": {"headline":"string","key_message":"string","metrics":[{"label":"string","value":"string","context":"string"}],"compliance_impact":"string","professional_note":"string"}
+  },
+  "roadmap": [{"phase":"string","duration":"string","title":"string","actions":["string"],"milestone":"string"}]
+}`;
+
+    const result=await callAPI('structure',sp);
+    render(result,ind,research.queries||[]);
+
+  }catch(err){
+    console.error(err);show('wizard');setS(4);
+    const e=document.getElementById('erbox');e.style.display='block';
+    e.textContent='Error: '+err.message+'. Check that GEMINI_API_KEY is set in Vercel environment variables.';
+  }
+}
+
+function bc(t){return({'Technical':'btc','Operational':'bop','Non-Technical':'bnt','Environmental':'ben','Hybrid':'bhy'}[t]||'bin');}
+
+function render(r,ind,queries){
+  document.getElementById('dmeta').textContent=`${ind.toUpperCase()} · ${D.bud} · ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}).toUpperCase()}`;
+  document.getElementById('sbadges').innerHTML=`<span class="bpill bin">${ind}</span><span class="bpill ${bc(r.solution_type)}">${r.solution_type||'Hybrid'}</span><span class="bpill bin">${D.bud}</span><span class="bpill bin">${D.tline||'6–12 months'}</span>`;
+  document.getElementById('stitle').textContent=r.solution_title||'—';
+  document.getElementById('sdiag').textContent=r.problem_diagnosis||'—';
+
+  let ph='';
+  (r.proof_cases||[]).slice(0,2).forEach(c=>{
+    ph+=`<div class="proofbox"><div class="pco">${c.company} <span style="color:var(--tx3);font-weight:400;font-size:11px">${c.year} · ${c.industry}</span></div><div class="pmeta">via ${c.vendor}</div><div class="ptxt">${c.situation} ${c.solution}</div><div class="pnums"><div class="pnum"><div class="pnv">${c.roi}</div><div class="pnl">ROI / Payback</div></div><div class="pnum"><div class="pnv">${c.timeframe}</div><div class="pnl">Time to result</div></div><div class="pnum"><div class="pnv">${c.investment}</div><div class="pnl">Investment</div></div></div></div>`;
+  });
+  document.getElementById('proofwrap').innerHTML=ph||'<p style="color:var(--tx3);font-size:13px">No case studies found for this profile.</p>';
+
+  const b=r.budget||{};
+  document.getElementById('budwrap').innerHTML=`
+    <div class="brow"><span class="bk">Investment range</span><span class="bv">${b.total_min} – ${b.total_max}</span></div>
+    <div class="brow"><span class="bk">CapEx portion</span><span class="bv">${b.capex_portion||'—'}</span></div>
+    <div class="brow"><span class="bk">Annual OpEx</span><span class="bv">${b.opex_annual||'—'}</span></div>
+    <div class="brow"><span class="bk">Payback period</span><span class="bv">${b.payback_months} months</span></div>
+    <div class="brow"><span class="bk">3-Year NPV</span><span class="bv">${b.npv_3yr||'—'}</span></div>
+    <div class="brow"><span class="bk">IRR</span><span class="bv">${b.irr||'—'}</span></div>
+    <div class="brow"><span class="bk">Phase 1</span><span class="bv" style="font-size:12px">${b.phase1_cost} — ${b.phase1_desc||''}</span></div>
+    <div class="brow"><span class="bk">Phase 2</span><span class="bv" style="font-size:12px">${b.phase2_cost} — ${b.phase2_desc||''}</span></div>
+    <div class="fnote">${b.financing_note||''}</div>`;
+
+  let kh='';
+  (r.kpis||[]).slice(0,5).forEach(k=>{
+    kh+=`<div class="krow"><div class="karr">↑</div><div style="flex:1"><div style="font-size:13px">${k.name}</div><div style="font-size:11px;color:var(--tx3)">${k.before} → <strong style="color:var(--gr)">${k.after}</strong> ${k.unit} · Top: ${k.benchmark}</div></div></div>`;
+  });
+  document.getElementById('kpiwrap').innerHTML=kh;
+
+  let ch='';
+  (r.competitor_benchmark||[]).slice(0,4).forEach((c,i)=>{
+    const sc=c.status==='deployed'?'sp-d':c.status==='exploring'?'sp-e':'sp-b';
+    ch+=`<div class="crow"><div style="font-size:11px;color:var(--tx3);width:20px">#${i+1}</div><div style="flex:1"><div style="font-size:13px;font-weight:500">${c.name}</div><div style="font-size:11px;color:var(--tx3)">${c.detail}</div></div><span class="spill ${sc}">${c.status}</span></div>`;
+  });
+  document.getElementById('compwrap').innerHTML=ch;
+
+  const ps=[{k:'ceo',l:'CEO'},{k:'cfo',l:'CFO'},{k:'coo',l:'COO'},{k:'cto',l:'CTO'},{k:'cmo',l:'CMO'},{k:'domain_expert',l:'Domain Expert'}];
+  let tabs='',panels='';
+  ps.forEach((p,i)=>{
+    const pd=(r.personas||{})[p.k];if(!pd)return;
+    tabs+=`<div class="ptab${i===0?' active':''}" id="ptab-${p.k}" onclick="swP('${p.k}')">${p.l}</div>`;
+    let mx='';(pd.metrics||[]).slice(0,3).forEach(m=>{mx+=`<div class="mbox"><div class="mlbl">${m.label}</div><div class="mv">${m.value}</div><div class="mc">${m.context||''}</div></div>`;});
+    let ex='';
+    if(p.k==='cfo'){
+      ex+=`<div style="margin-top:14px"><div class="fl" style="margin-bottom:8px">Financing options</div><div class="dpills">${(pd.financing_options||[]).map(f=>`<span class="dpill">${f}</span>`).join('')}</div></div>`;
+      if(pd.tax_note)ex+=`<div class="ib"><strong>Tax note:</strong> ${pd.tax_note}</div>`;
+      if(pd.risk_note)ex+=`<div class="wb2"><strong>Risk of delay:</strong> ${pd.risk_note}</div>`;
+    }
+    if(p.k==='coo'){
+      ex+=`<div style="margin-top:14px"><div class="fl" style="margin-bottom:8px">Process changes required</div><ul class="lp">${(pd.process_changes||[]).map(c=>`<li>${c}</li>`).join('')}</ul></div>`;
+      ex+=`<div style="display:flex;gap:12px;margin-top:12px"><div class="ib" style="flex:1"><strong>Workforce impact:</strong> ${pd.headcount_impact||'—'}</div><div class="ib" style="min-width:110px;text-align:center"><div style="font-size:10px;color:var(--tx3);margin-bottom:4px">Complexity</div><div style="font-size:16px;font-weight:700;color:${pd.complexity==='Low'?'var(--gr)':pd.complexity==='High'?'var(--rd)':'var(--am)'}">${pd.complexity}</div></div></div>`;
+    }
+    if(p.k==='cto'){
+      ex+=`<div style="margin-top:14px"><div class="fl" style="margin-bottom:8px">Technical requirements</div><ul class="lp">${(pd.tech_requirements||[]).map(c=>`<li>${c}</li>`).join('')}</ul></div>`;
+      ex+=`<div class="ib"><strong>Build vs Buy:</strong> ${pd.build_buy||'—'}</div>`;
+      if((pd.risks||[]).length)ex+=`<div class="wb2"><strong>Key risks:</strong> ${pd.risks.join(' · ')}</div>`;
+    }
+    if(p.k==='cmo'){
+      if(pd.customer_impact)ex+=`<div class="ib"><strong>Customer impact:</strong> ${pd.customer_impact}</div>`;
+      if(pd.revenue_attribution)ex+=`<div class="ib" style="margin-top:8px"><strong>Revenue attribution:</strong> ${pd.revenue_attribution}</div>`;
+    }
+    if(p.k==='domain_expert'){
+      if(pd.compliance_impact)ex+=`<div class="ib"><strong>Compliance:</strong> ${pd.compliance_impact}</div>`;
+      if(pd.professional_note)ex+=`<div class="wb2"><strong>Professional note:</strong> ${pd.professional_note}</div>`;
+    }
+    const bn=p.k==='ceo'&&pd.board_narrative?`<div class="ib" style="margin-top:12px;font-style:italic">"${pd.board_narrative}"</div>`:'';
+    const ri=p.k==='ceo'&&pd.risk_of_inaction?`<div class="wb2"><strong>Risk of inaction:</strong> ${pd.risk_of_inaction}</div>`:'';
+    panels+=`<div class="ppanel${i===0?' active':''}" id="ppanel-${p.k}"><div class="phero"><div class="prole">${p.l} VIEW</div><div class="phl">${pd.headline||'—'}</div><div class="pmsg">${pd.key_message||'—'}</div><div class="mr">${mx}</div></div>${ex}${bn}${ri}</div>`;
+  });
+  document.getElementById('ptabs').innerHTML=tabs;
+  document.getElementById('ppanels').innerHTML=panels;
+
+  let rh='';
+  (r.roadmap||[]).forEach(p=>{
+    rh+=`<div class="rphase"><div class="rl"><div class="rdot"></div><div class="rline"></div></div><div class="rcont"><div class="rpl">${p.phase} · ${p.duration}</div><div class="rti">${p.title}</div><div class="ra">${(p.actions||[]).join(' · ')}</div><span class="rmil">✓ ${p.milestone}</span></div></div>`;
+  });
+  document.getElementById('rmwrap').innerHTML=rh;
+
+  if(queries.length){
+    const sw=document.getElementById('srcrow');sw.style.display='flex';
+    queries.slice(0,6).forEach(q=>{const c=document.createElement('span');c.className='srchip';c.textContent=q;sw.appendChild(c);});
+  }
+  show('dashboard');
+}
+
+function swP(k){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.ppanel').forEach(p=>p.classList.remove('active'));
+  const t=document.getElementById('ptab-'+k),p=document.getElementById('ppanel-'+k);
+  if(t)t.classList.add('active');if(p)p.classList.add('active');
+}
+</script>
+</body>
+</html>
