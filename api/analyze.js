@@ -1,26 +1,21 @@
-// Model selection:
-// gemini-2.5-flash-lite → 1,000 RPD free (primary — best free throughput)
-// gemini-1.5-flash      → 1,500 RPD free (fallback if lite quota exhausted)
-// Note: gemini-2.5-flash only has ~20 RPD on free tier — do NOT use that.
-const RESEARCH_MODEL  = 'gemini-2.5-flash-lite';
-const STRUCTURE_MODEL = 'gemini-2.5-flash-lite';
-const FALLBACK_MODEL  = 'gemini-1.5-flash';
+// Models — free tier quotas:
+// gemini-2.5-flash-lite → 1,000 RPD free (primary)
+// gemini-1.5-flash      → 1,500 RPD free (auto-fallback)
+const MODELS = ['gemini-2.5-flash-lite', 'gemini-1.5-flash'];
 const BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
-async function geminiCall(key, model, body) {
+async function call(key, model, body) {
   const r = await fetch(`${BASE}/${model}:generateContent?key=${key}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
   });
-  const data = await r.json();
-  // If quota exceeded on primary model, automatically retry with fallback
-  if (data.error?.status === 'RESOURCE_EXHAUSTED' && model !== FALLBACK_MODEL) {
-    console.warn(`${model} quota exceeded — retrying with ${FALLBACK_MODEL}`);
-    return geminiCall(key, FALLBACK_MODEL, body);
+  const d = await r.json();
+  if (d.error?.status === 'RESOURCE_EXHAUSTED' && model === MODELS[0]) {
+    console.warn('Primary quota hit — falling back to', MODELS[1]);
+    return call(key, MODELS[1], body);
   }
-  if (data.error) throw new Error(`Gemini [${model}]: ${data.error.message}`);
-  return data;
+  if (d.error) throw new Error(`[${model}] ${d.error.message}`);
+  return d;
 }
 
 export default async function handler(req, res) {
@@ -31,46 +26,34 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return; }
 
   const KEY = process.env.GEMINI_API_KEY;
-  if (!KEY) {
-    res.status(500).json({ error: 'GEMINI_API_KEY not set in Vercel environment variables. Go to: Vercel Project → Settings → Environment Variables.' });
-    return;
-  }
+  if (!KEY) { res.status(500).json({ error: 'GEMINI_API_KEY not configured in Vercel → Settings → Environment Variables' }); return; }
 
   const { type, payload } = req.body || {};
-  if (!type || !payload?.prompt) {
-    res.status(400).json({ error: 'Request must include { type, payload: { prompt } }' });
-    return;
-  }
+  if (!type || !payload?.prompt) { res.status(400).json({ error: 'Body must include { type, payload: { prompt } }' }); return; }
 
   try {
     if (type === 'research') {
-      // ── CALL 1: RAG Retrieval — Google Search grounding fetches live web data ──
-      // This is the retrieval step. Gemini searches Google in real-time and
-      // grounds its answer in actual URLs — not training memory. No hallucination.
-      const data = await geminiCall(KEY, RESEARCH_MODEL, {
+      // RAG STEP 1 — Live Google Search grounding. Gemini fetches real web pages,
+      // press releases, case studies, and annual reports in real time.
+      // Nothing from training memory — every fact is cited from a live URL.
+      const d = await call(KEY, MODELS[0], {
         contents: [{ parts: [{ text: payload.prompt }] }],
         tools: [{ google_search: {} }],
         generationConfig: { temperature: 0.1 }
       });
-      const text = (data.candidates[0].content.parts || [])
-        .filter(p => p.text).map(p => p.text).join('');
-      const queries = data.candidates[0].groundingMetadata?.webSearchQueries || [];
-      const sources = data.candidates[0].groundingMetadata?.groundingSupports
-        ?.flatMap(s => s.groundingChunkIndices || []) || [];
-      res.status(200).json({ text, queries, sourceCount: sources.length });
+      const text = (d.candidates[0].content.parts || []).filter(p => p.text).map(p => p.text).join('');
+      const queries = d.candidates[0].groundingMetadata?.webSearchQueries || [];
+      res.status(200).json({ text, queries });
 
     } else if (type === 'structure') {
-      // ── CALL 2: LLM Generation — structure retrieved data into guaranteed JSON ──
-      // responseMimeType: 'application/json' forces the model to output ONLY valid
-      // JSON — this is what eliminates all JSON parse errors completely.
-      const data = await geminiCall(KEY, STRUCTURE_MODEL, {
+      // RAG STEP 2 — Structure retrieved data into guaranteed-valid JSON.
+      // responseMimeType: 'application/json' forces the model to output ONLY
+      // parseable JSON — no markdown, no commentary, no parse errors ever.
+      const d = await call(KEY, MODELS[0], {
         contents: [{ parts: [{ text: payload.prompt }] }],
-        generationConfig: {
-          temperature: 0.1,
-          responseMimeType: 'application/json'
-        }
+        generationConfig: { temperature: 0.1, responseMimeType: 'application/json' }
       });
-      const json = JSON.parse(data.candidates[0].content.parts[0].text);
+      const json = JSON.parse(d.candidates[0].content.parts[0].text);
       res.status(200).json(json);
 
     } else {
