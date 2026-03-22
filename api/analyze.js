@@ -1,18 +1,14 @@
-// Models — free tier quotas:
-// gemini-2.5-flash-lite → 1,000 RPD free (primary)
-// gemini-1.5-flash      → 1,500 RPD free (auto-fallback)
 const MODELS = ['gemini-2.5-flash-lite', 'gemini-1.5-flash'];
 const BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
-async function call(key, model, body) {
+async function callGemini(key, model, body) {
   const r = await fetch(`${BASE}/${model}:generateContent?key=${key}`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
   });
   const d = await r.json();
   if (d.error?.status === 'RESOURCE_EXHAUSTED' && model === MODELS[0]) {
-    console.warn('Primary quota hit — falling back to', MODELS[1]);
-    return call(key, MODELS[1], body);
+    return callGemini(key, MODELS[1], body);
   }
   if (d.error) throw new Error(`[${model}] ${d.error.message}`);
   return d;
@@ -26,30 +22,45 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return; }
 
   const KEY = process.env.GEMINI_API_KEY;
-  if (!KEY) { res.status(500).json({ error: 'GEMINI_API_KEY not configured in Vercel → Settings → Environment Variables' }); return; }
+  if (!KEY) {
+    res.status(500).json({ error: 'GEMINI_API_KEY not configured. Go to Vercel → Project → Settings → Environment Variables and add GEMINI_API_KEY.' });
+    return;
+  }
 
   const { type, payload } = req.body || {};
-  if (!type || !payload?.prompt) { res.status(400).json({ error: 'Body must include { type, payload: { prompt } }' }); return; }
+  if (!type || !payload?.prompt) {
+    res.status(400).json({ error: 'Body must be { type: "research"|"structure", payload: { prompt: "..." } }' });
+    return;
+  }
 
   try {
     if (type === 'research') {
-      // RAG STEP 1 — Live Google Search grounding. Gemini fetches real web pages,
-      // press releases, case studies, and annual reports in real time.
-      // Nothing from training memory — every fact is cited from a live URL.
-      const d = await call(KEY, MODELS[0], {
+      // RAG STEP 1 — Retrieval with live Google Search grounding
+      // Gemini fetches real URLs and grounds every claim in a web source.
+      // Nothing from training memory — all citations traceable to real pages.
+      const d = await callGemini(KEY, MODELS[0], {
         contents: [{ parts: [{ text: payload.prompt }] }],
         tools: [{ google_search: {} }],
         generationConfig: { temperature: 0.1 }
       });
-      const text = (d.candidates[0].content.parts || []).filter(p => p.text).map(p => p.text).join('');
-      const queries = d.candidates[0].groundingMetadata?.webSearchQueries || [];
-      res.status(200).json({ text, queries });
+      const cand = d.candidates[0];
+      const text = (cand.content.parts || []).filter(p => p.text).map(p => p.text).join('');
+      const meta = cand.groundingMetadata || {};
+
+      // Extract real source URLs and titles from grounding chunks
+      const sources = (meta.groundingChunks || [])
+        .filter(c => c.web?.uri)
+        .map(c => ({ url: c.web.uri, title: c.web.title || new URL(c.web.uri).hostname }))
+        .filter((s, i, arr) => arr.findIndex(x => x.url === s.url) === i) // deduplicate
+        .slice(0, 10);
+
+      const queries = meta.webSearchQueries || [];
+      res.status(200).json({ text, sources, queries });
 
     } else if (type === 'structure') {
-      // RAG STEP 2 — Structure retrieved data into guaranteed-valid JSON.
-      // responseMimeType: 'application/json' forces the model to output ONLY
-      // parseable JSON — no markdown, no commentary, no parse errors ever.
-      const d = await call(KEY, MODELS[0], {
+      // RAG STEP 2 — Generation from retrieved context
+      // responseMimeType: application/json guarantees valid JSON — no parse errors ever.
+      const d = await callGemini(KEY, MODELS[0], {
         contents: [{ parts: [{ text: payload.prompt }] }],
         generationConfig: { temperature: 0.1, responseMimeType: 'application/json' }
       });
@@ -60,7 +71,7 @@ export default async function handler(req, res) {
       res.status(400).json({ error: `Unknown type "${type}". Use "research" or "structure".` });
     }
   } catch (err) {
-    console.error('OptiCore error:', err.message);
+    console.error('OptiCore:', err.message);
     res.status(500).json({ error: err.message });
   }
 }
