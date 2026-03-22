@@ -8,350 +8,330 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root{
-  --bg:linear-gradient(135deg,#eef2ff 0%,#f7f8ff 50%,#f0eeff 100%);
-  --gl:rgba(255,255,255,.80);--gls:rgba(255,255,255,.93);--gb:rgba(255,255,255,.97);
-  --gs:0 4px 24px rgba(82,84,212,.08),0 1px 6px rgba(82,84,212,.05);
-  --gsl:0 16px 48px rgba(82,84,212,.12),0 4px 12px rgba(82,84,212,.06);
-  --blur:blur(20px);
-  --ac:#4f46e5;--acl:rgba(79,70,229,.09);--acm:rgba(79,70,229,.18);
-  --tx:#0d0d1c;--tx2:#252540;--tx3:#52526e;
-  --gr:#065f46;--grb:rgba(6,95,70,.09);--grl:#d1fae5;
-  --am:#92400e;--amb:rgba(146,64,14,.09);--aml:#fef3c7;
-  --rd:#991b1b;--rdb:rgba(153,27,27,.08);--rdl:#fee2e2;
-  --bl:#1e40af;--blb:rgba(30,64,175,.09);--bll:#dbeafe;
-  --pu:#5b21b6;--pub:rgba(91,33,182,.09);
-  --tl:#134e4a;--tlb:rgba(19,78,74,.09);
-  --pill:999px;--r:18px;--rs:12px;
+  --bg:#f0f1f9;
+  --ac:#312e81;--acb:#4f46e5;--acl:rgba(79,70,229,.08);--acm:rgba(79,70,229,.16);
+  --tx:#0b0b18;--tx2:#1e1e38;--tx3:#52526e;--tx4:#8888a4;
+  --gr:#065f46;--grb:#d1fae5;--grl:#ecfdf5;
+  --am:#92400e;--aml:#fef3c7;
+  --rd:#991b1b;--rdl:#fee2e2;
+  --bl:#1e40af;--bll:#dbeafe;
+  --pu:#5b21b6;--pul:#ede9fe;
+  --pill:999px;--r:12px;--rs:8px;
+  --gap:16px;--pad:20px;
+  --card-bg:#ffffff;--card-border:1px solid #e4e4f0;
+  --card-shadow:0 1px 4px rgba(17,17,51,.07);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);background-attachment:fixed;color:var(--tx);font-size:14px;line-height:1.65;min-height:100vh;}
-body::before{content:'';position:fixed;top:-20%;right:-10%;width:60vw;height:60vw;background:radial-gradient(circle,rgba(79,70,229,.055),transparent 65%);pointer-events:none;z-index:0;}
-body::after{content:'';position:fixed;bottom:-15%;left:-8%;width:50vw;height:50vw;background:radial-gradient(circle,rgba(91,33,182,.045),transparent 65%);pointer-events:none;z-index:0;}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.65;min-height:100vh;}
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:rgba(79,70,229,.2);border-radius:4px;}
 
-/* glass */
-.g{background:var(--gl);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);box-shadow:var(--gs);border-radius:var(--r);}
-.gss{background:var(--gls);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);box-shadow:var(--gs);border-radius:var(--r);}
-
-/* forms */
-.fi{width:100%;background:rgba(255,255,255,.92);border:1.5px solid rgba(79,70,229,.2);color:var(--tx);padding:11px 15px;border-radius:var(--pill);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;}
-.fi:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acl);}
-.fi-ta{width:100%;background:rgba(255,255,255,.92);border:1.5px solid rgba(79,70,229,.2);color:var(--tx);padding:11px 15px;border-radius:14px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:84px;transition:border-color .2s,box-shadow .2s;}
-.fi-ta:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acl);}
-.fi-sel{width:100%;background:rgba(255,255,255,.92);border:1.5px solid rgba(79,70,229,.2);color:var(--tx);padding:11px 15px;border-radius:var(--pill);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234f46e5' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer;}
-.fi-sel:focus{border-color:var(--ac);}
-.fl{font-size:11px;font-weight:700;color:var(--tx2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px;display:block;}
+/* ── shared form controls ── */
+.fi{width:100%;background:#fff;border:1.5px solid #d4d4e8;color:var(--tx);padding:10px 14px;border-radius:var(--pill);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;}
+.fi:focus{border-color:var(--acb);box-shadow:0 0 0 3px var(--acl);}
+.fi-ta{width:100%;background:#fff;border:1.5px solid #d4d4e8;color:var(--tx);padding:10px 14px;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:82px;transition:border-color .2s,box-shadow .2s;}
+.fi-ta:focus{border-color:var(--acb);box-shadow:0 0 0 3px var(--acl);}
+.fi-sel{width:100%;background:#fff;border:1.5px solid #d4d4e8;color:var(--tx);padding:10px 14px;border-radius:var(--pill);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' fill='none'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%234f46e5' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;cursor:pointer;}
+.fi-sel:focus{border-color:var(--acb);}
+.fl{font-size:11px;font-weight:700;color:var(--tx3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;display:block;}
 .fg{margin-bottom:16px;}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.btn{width:100%;background:var(--ac);color:#fff;border:none;padding:13px;font-size:15px;font-weight:600;border-radius:var(--pill);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
-.btn:hover{background:#4338ca;transform:translateY(-1px);box-shadow:0 8px 20px rgba(79,70,229,.3);}
-.btn-sm{background:rgba(255,255,255,.88);color:var(--tx2);border:1.5px solid rgba(79,70,229,.22);padding:7px 16px;font-size:12px;font-weight:600;border-radius:var(--pill);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
-.btn-sm:hover{border-color:var(--ac);color:var(--ac);background:#fff;}
-.btn-n{background:var(--ac);color:#fff;border:none;padding:11px 32px;font-size:14px;font-weight:600;border-radius:var(--pill);cursor:pointer;margin-top:24px;transition:all .2s;font-family:'DM Sans',sans-serif;}
-.btn-n:hover{background:#4338ca;box-shadow:0 6px 18px rgba(79,70,229,.3);}
-.btn-green{background:var(--gr);color:#fff;border:none;padding:8px 18px;font-size:12px;font-weight:600;border-radius:var(--pill);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap;}
-.btn-green:hover{background:#064e3b;box-shadow:0 4px 12px rgba(6,95,70,.3);}
-.btn-blue{background:var(--bl);color:#fff;border:none;padding:8px 18px;font-size:12px;font-weight:600;border-radius:var(--pill);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap;}
-.btn-blue:hover{background:#1e3a8a;}
+.btn{width:100%;background:var(--acb);color:#fff;border:none;padding:12px;font-size:15px;font-weight:600;border-radius:var(--pill);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.btn:hover{background:#4338ca;box-shadow:0 6px 18px rgba(79,70,229,.28);}
+.btn-ghost{background:#fff;color:var(--tx2);border:1.5px solid #d4d4e8;padding:7px 16px;font-size:12px;font-weight:600;border-radius:var(--pill);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap;}
+.btn-ghost:hover{border-color:var(--acb);color:var(--acb);}
+.btn-n{background:var(--acb);color:#fff;border:none;padding:11px 32px;font-size:14px;font-weight:600;border-radius:var(--pill);cursor:pointer;margin-top:24px;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.btn-n:hover{background:#4338ca;box-shadow:0 5px 16px rgba(79,70,229,.28);}
+.btn-gr{background:var(--gr);color:#fff;border:none;padding:7px 18px;font-size:12px;font-weight:600;border-radius:var(--pill);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap;}
+.btn-gr:hover{background:#064e3b;}
+.btn-bl{background:var(--bl);color:#fff;border:none;padding:7px 18px;font-size:12px;font-weight:600;border-radius:var(--pill);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap;}
+.btn-bl:hover{background:#1e3a8a;}
 
-/* ─── LANDING ─── */
-#landing{min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;padding:60px 24px;position:relative;z-index:1;}
-.land-box{width:100%;max-width:760px;display:flex;flex-direction:column;align-items:center;text-align:center;margin:0 auto;}
-.lbadge{background:var(--acl);color:var(--ac);border:1px solid var(--acm);font-size:11px;font-weight:700;padding:6px 18px;border-radius:var(--pill);margin-bottom:28px;letter-spacing:.8px;text-transform:uppercase;}
-.lt{font-family:'DM Serif Display',serif;font-size:52px;line-height:1.12;margin-bottom:20px;letter-spacing:-.5px;color:var(--tx);}
-.lt em{color:var(--ac);font-style:normal;}
-.ls{font-size:16px;color:var(--tx2);max-width:500px;line-height:1.8;margin-bottom:44px;}
-.sbar{display:grid;grid-template-columns:repeat(4,1fr);width:100%;max-width:580px;background:rgba(255,255,255,.88);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);border-radius:var(--pill);box-shadow:var(--gs);margin-bottom:40px;overflow:hidden;}
-.stat{padding:16px 4px;text-align:center;border-right:1px solid rgba(79,70,229,.1);}
+/* ── LANDING ── */
+#landing{min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;padding:60px 24px;background:linear-gradient(155deg,#eef0ff 0%,#f7f7ff 50%,#ede9ff 100%);}
+.land-box{width:100%;max-width:740px;display:flex;flex-direction:column;align-items:center;text-align:center;}
+.lbadge{background:rgba(79,70,229,.1);color:#4338ca;border:1px solid rgba(79,70,229,.2);font-size:10px;font-weight:700;padding:5px 16px;border-radius:var(--pill);margin-bottom:28px;letter-spacing:1px;text-transform:uppercase;}
+.lt{font-family:'DM Serif Display',serif;font-size:50px;line-height:1.12;margin-bottom:18px;letter-spacing:-.5px;color:var(--tx);}
+.lt em{color:var(--acb);font-style:normal;}
+.ls{font-size:16px;color:var(--tx3);max-width:480px;line-height:1.8;margin-bottom:40px;}
+.sbar{display:grid;grid-template-columns:repeat(4,1fr);width:100%;max-width:560px;background:#fff;border:1px solid #e4e4f0;border-radius:var(--pill);box-shadow:0 2px 12px rgba(49,46,129,.09);margin-bottom:36px;overflow:hidden;}
+.stat{padding:15px 4px;text-align:center;border-right:1px solid #f0f0f8;}
 .stat:last-child{border-right:none;}
-.sn{font-family:'DM Serif Display',serif;font-size:26px;color:var(--ac);line-height:1;}
-.sl2{font-size:11px;color:var(--tx3);margin-top:4px;font-weight:600;letter-spacing:.3px;}
-.lcta{background:var(--ac);color:#fff;border:none;padding:15px 48px;font-size:16px;font-weight:600;border-radius:var(--pill);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;box-shadow:0 8px 28px rgba(79,70,229,.32);letter-spacing:.2px;margin-bottom:52px;}
-.lcta:hover{background:#4338ca;transform:translateY(-2px);box-shadow:0 14px 36px rgba(79,70,229,.42);}
-.itags{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:700px;margin-bottom:48px;}
-.itag{background:rgba(255,255,255,.76);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(79,70,229,.14);color:var(--tx2);font-size:12px;padding:5px 14px;border-radius:var(--pill);font-weight:500;}
-.hist-section{width:100%;max-width:600px;text-align:left;}
-.hist-title{font-size:12px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;}
-.hist-item{background:rgba(255,255,255,.8);border:1px solid rgba(79,70,229,.14);border-radius:var(--rs);padding:12px 16px;margin-bottom:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px;}
-.hist-item:hover{border-color:var(--ac);background:#fff;}
-.hist-ind{font-weight:700;font-size:13px;color:var(--tx);}
-.hist-meta{font-size:11px;color:var(--tx3);margin-top:1px;}
-.hist-arrow{margin-left:auto;color:var(--ac);font-size:16px;}
+.sn{font-family:'DM Serif Display',serif;font-size:24px;color:var(--acb);line-height:1;}
+.sl2{font-size:11px;color:var(--tx4);margin-top:3px;font-weight:600;letter-spacing:.3px;}
+.lcta{background:var(--acb);color:#fff;border:none;padding:14px 46px;font-size:15px;font-weight:600;border-radius:var(--pill);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;box-shadow:0 6px 24px rgba(79,70,229,.3);margin-bottom:48px;}
+.lcta:hover{background:#4338ca;transform:translateY(-2px);box-shadow:0 12px 32px rgba(79,70,229,.38);}
+.itags{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:680px;margin-bottom:44px;}
+.itag{background:rgba(255,255,255,.9);border:1px solid #e0e0ef;color:var(--tx3);font-size:12px;padding:5px 14px;border-radius:var(--pill);font-weight:500;}
+.hist-sec{width:100%;max-width:580px;text-align:left;}
+.hist-hdr{font-size:11px;font-weight:700;color:var(--tx4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;}
+.hist-row{background:#fff;border:1px solid #e8e8f4;border-radius:var(--rs);padding:11px 14px;margin-bottom:7px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;}
+.hist-row:hover{border-color:var(--acb);background:#fafaff;}
+.hist-ind{font-weight:700;font-size:13px;}
+.hist-meta{font-size:11px;color:var(--tx4);margin-top:1px;}
 
-/* ─── WIZARD ─── */
-#wizard{display:none;min-height:100vh;padding:32px 24px;max-width:760px;margin:0 auto;position:relative;z-index:1;}
-.wh{display:flex;align-items:center;gap:14px;margin-bottom:48px;}
-.wb{background:rgba(255,255,255,.88);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);color:var(--tx2);padding:7px 16px;border-radius:var(--pill);cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:all .2s;font-weight:500;}
-.wb:hover{color:var(--ac);border-color:rgba(79,70,229,.38);}
+/* ── WIZARD ── */
+#wizard{display:none;min-height:100vh;padding:32px 24px;max-width:740px;margin:0 auto;}
+.wh{display:flex;align-items:center;gap:14px;margin-bottom:44px;}
+.wb{background:#fff;border:1px solid #e0e0ef;color:var(--tx3);padding:7px 16px;border-radius:var(--pill);cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:all .2s;font-weight:500;}
+.wb:hover{color:var(--acb);border-color:var(--acb);}
 .spills{display:flex;gap:5px;}
-.sp{height:5px;border-radius:var(--pill);background:rgba(79,70,229,.14);transition:all .3s;width:16px;}
-.sp.active{background:var(--ac);width:26px;}
-.sp.done{background:rgba(79,70,229,.38);}
-.wlbl{margin-left:auto;font-size:11px;color:var(--tx3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.sp{height:5px;border-radius:var(--pill);background:#e0e0ef;transition:all .3s;width:16px;}
+.sp.active{background:var(--acb);width:26px;}
+.sp.done{background:rgba(79,70,229,.35);}
+.wlbl{margin-left:auto;font-size:11px;color:var(--tx4);font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
 .step{display:none;}.step.active{display:block;}
-.ey{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--ac);font-weight:700;margin-bottom:8px;}
-.stt{font-family:'DM Serif Display',serif;font-size:32px;margin-bottom:8px;line-height:1.2;color:var(--tx);}
-.ss{color:var(--tx2);font-size:14px;margin-bottom:32px;line-height:1.75;}
-.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:28px;}
-.ic{background:rgba(255,255,255,.84);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1.5px solid transparent;border-radius:var(--rs);padding:16px 13px;cursor:pointer;transition:all .2s;box-shadow:0 2px 10px rgba(79,70,229,.06);}
-.ic:hover{border-color:rgba(79,70,229,.3);box-shadow:var(--gs);}
-.ic.sel{border-color:var(--ac);background:rgba(79,70,229,.07);box-shadow:0 0 0 3px rgba(79,70,229,.08);}
-.ii{font-size:22px;margin-bottom:7px;}.in{font-size:13px;font-weight:700;margin-bottom:2px;color:var(--tx);}.isb{font-size:11px;color:var(--tx3);}
-.bg2{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-.bc{background:rgba(255,255,255,.84);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1.5px solid transparent;border-radius:var(--rs);padding:16px 18px;cursor:pointer;transition:all .2s;}
-.bc:hover{border-color:rgba(79,70,229,.3);}
-.bc.sel{border-color:var(--ac);background:rgba(79,70,229,.07);}
-.ba{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ac);margin-bottom:3px;}
-.bt{font-size:11px;color:var(--tx3);font-weight:500;}
+.ey{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--acb);font-weight:700;margin-bottom:7px;}
+.stt{font-family:'DM Serif Display',serif;font-size:30px;margin-bottom:8px;line-height:1.2;color:var(--tx);}
+.ss{color:var(--tx3);font-size:14px;margin-bottom:28px;line-height:1.75;}
+.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:24px;}
+.ic{background:#fff;border:1.5px solid #e0e0ef;border-radius:var(--rs);padding:15px 13px;cursor:pointer;transition:all .2s;}
+.ic:hover{border-color:var(--acb);background:#fafaff;}
+.ic.sel{border-color:var(--acb);background:rgba(79,70,229,.05);}
+.ii{font-size:20px;margin-bottom:6px;}.in{font-size:13px;font-weight:700;margin-bottom:2px;color:var(--tx);}.isb{font-size:11px;color:var(--tx4);}
+.bg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.bc{background:#fff;border:1.5px solid #e0e0ef;border-radius:var(--rs);padding:15px 18px;cursor:pointer;transition:all .2s;}
+.bc:hover{border-color:var(--acb);}
+.bc.sel{border-color:var(--acb);background:rgba(79,70,229,.05);}
+.ba{font-family:'DM Serif Display',serif;font-size:19px;color:var(--acb);margin-bottom:3px;}
+.bt{font-size:11px;color:var(--tx4);font-weight:500;}
 .pg{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-.pi{background:rgba(255,255,255,.84);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1.5px solid transparent;border-radius:var(--rs);padding:10px 13px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:9px;font-size:13px;color:var(--tx);font-weight:500;}
-.pi:hover{border-color:rgba(79,70,229,.3);}
-.pi.sel{border-color:var(--ac);background:rgba(79,70,229,.07);}
-.pchk{width:17px;height:17px;border-radius:5px;border:1.5px solid rgba(79,70,229,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;transition:all .2s;color:transparent;}
-.pi.sel .pchk{background:var(--ac);border-color:var(--ac);color:#fff;}
-.erbox{background:var(--rdb);border:1px solid rgba(153,27,27,.2);border-radius:var(--rs);padding:11px 15px;margin-top:14px;font-size:13px;color:var(--rd);font-weight:500;}
+.pi{background:#fff;border:1.5px solid #e0e0ef;border-radius:var(--rs);padding:10px 13px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:9px;font-size:13px;color:var(--tx);font-weight:500;}
+.pi:hover{border-color:var(--acb);}
+.pi.sel{border-color:var(--acb);background:rgba(79,70,229,.05);}
+.pchk{width:16px;height:16px;border-radius:4px;border:1.5px solid #d4d4e8;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;transition:all .2s;color:transparent;}
+.pi.sel .pchk{background:var(--acb);border-color:var(--acb);color:#fff;}
+.erbox{background:#fef2f2;border:1px solid #fecaca;border-radius:var(--rs);padding:10px 14px;margin-top:12px;font-size:13px;color:var(--rd);font-weight:500;}
 
-/* ─── PROCESSING ─── */
-#processing{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:32px;position:relative;z-index:1;}
-.pc{max-width:420px;width:100%;padding:36px;text-align:center;}
-.prw{position:relative;width:72px;height:72px;margin:0 auto 24px;}
-.prr{width:72px;height:72px;border-radius:50%;border:2.5px solid rgba(79,70,229,.14);border-top-color:var(--ac);animation:spin 1s linear infinite;}
-.pri{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:50%;background:var(--acl);display:flex;align-items:center;justify-content:center;font-size:20px;}
+/* ── PROCESSING ── */
+#processing{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:32px;}
+.pc{max-width:400px;width:100%;padding:32px;text-align:center;background:#fff;border:1px solid #e4e4f0;border-radius:var(--r);box-shadow:var(--card-shadow);}
+.prw{position:relative;width:68px;height:68px;margin:0 auto 22px;}
+.prr{width:68px;height:68px;border-radius:50%;border:2.5px solid #e4e4f0;border-top-color:var(--acb);animation:spin .9s linear infinite;}
+.pri{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:var(--acl);display:flex;align-items:center;justify-content:center;font-size:18px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.ptit{font-family:'DM Serif Display',serif;font-size:21px;margin-bottom:7px;color:var(--tx);}
-.psub{font-size:12px;color:var(--tx2);margin-bottom:24px;}
+.ptit{font-family:'DM Serif Display',serif;font-size:19px;margin-bottom:6px;color:var(--tx);}
+.psub{font-size:12px;color:var(--tx3);margin-bottom:22px;}
 .psteps{list-style:none;text-align:left;}
-.psteps li{font-size:13px;color:var(--tx3);padding:5px 0;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(79,70,229,.08);}
+.psteps li{font-size:13px;color:var(--tx4);padding:5px 0;display:flex;align-items:center;gap:7px;border-bottom:1px solid #f0f0f8;}
 .psteps li:last-child{border-bottom:none;}
-.psteps li.active{color:var(--ac);font-weight:700;}
+.psteps li.active{color:var(--acb);font-weight:700;}
 .psteps li.done{color:var(--gr);}
-.pdot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.pdot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
 
-/* ─── DASHBOARD ─── */
-#dashboard{display:none;position:relative;z-index:1;}
-.dn{background:rgba(255,255,255,.94);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-bottom:1.5px solid rgba(79,70,229,.1);padding:12px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
-.dlogo{display:flex;align-items:center;gap:8px;}
-.dli{width:30px;height:30px;border-radius:9px;background:var(--ac);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;}
-.dln{font-family:'DM Serif Display',serif;font-size:18px;color:var(--tx);}
-.dln em{color:var(--ac);font-style:normal;}
-.dmeta{font-size:11px;color:var(--tx3);font-weight:600;letter-spacing:.3px;}
-.nav-btns{display:flex;gap:8px;align-items:center;}
+/* ── DASHBOARD ── */
+#dashboard{display:none;}
+.dn{background:#fff;border-bottom:1px solid #e4e4f0;padding:11px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;box-shadow:0 1px 4px rgba(17,17,51,.05);}
+.dlogo{display:flex;align-items:center;gap:7px;}
+.dli{width:28px;height:28px;border-radius:8px;background:var(--acb);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;}
+.dln{font-family:'DM Serif Display',serif;font-size:17px;color:var(--tx);}
+.dln em{color:var(--acb);font-style:normal;}
+.dmeta{font-size:11px;color:var(--tx4);font-weight:600;letter-spacing:.3px;}
+.nav-r{display:flex;gap:7px;align-items:center;}
 
-/* Industry signals banner */
-.signals-bar{background:rgba(255,255,255,.7);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-bottom:1px solid rgba(79,70,229,.1);padding:10px 28px;display:flex;align-items:center;gap:20px;overflow-x:auto;}
-.sig-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ac);white-space:nowrap;}
-.sig-item{display:flex;align-items:center;gap:7px;white-space:nowrap;}
-.sig-dot{width:6px;height:6px;border-radius:50%;background:var(--ac);flex-shrink:0;}
-.sig-text{font-size:12px;color:var(--tx2);font-weight:500;}
+/* signals */
+.sigbar{background:#f5f5ff;border-bottom:1px solid #e8e8f8;padding:8px 24px;display:none;align-items:center;gap:0;overflow:hidden;}
+.sig-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--acb);white-space:nowrap;padding-right:12px;border-right:1px solid #d4d4e8;margin-right:12px;}
+.sig-list{display:flex;gap:16px;overflow:hidden;flex:1;}
+.sig-item{display:flex;align-items:center;gap:6px;white-space:nowrap;min-width:0;}
+.sig-dot{width:5px;height:5px;border-radius:50%;background:var(--acb);flex-shrink:0;}
+.sig-txt{font-size:12px;color:var(--tx2);font-weight:500;overflow:hidden;text-overflow:ellipsis;}
 
-.dbody{max-width:1160px;margin:0 auto;padding:28px 24px;}
+.dbody{max-width:1120px;margin:0 auto;padding:24px 20px;}
 
-/* Urgency score in hero */
-.sh{padding:32px 36px;margin-bottom:20px;background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(235,233,255,.78));backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);box-shadow:var(--gsl);border-radius:var(--r);position:relative;overflow:hidden;}
-.sh::before{content:'';position:absolute;top:-60px;right:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(79,70,229,.07),transparent 70%);}
-.sh-top{display:flex;align-items:flex-start;gap:24px;}
-.sh-main{flex:1;}
-.urgency-box{flex-shrink:0;text-align:center;background:rgba(255,255,255,.9);border:1px solid rgba(79,70,229,.15);border-radius:var(--r);padding:16px 20px;min-width:110px;}
-.urg-score{font-family:'DM Serif Display',serif;font-size:42px;line-height:1;margin-bottom:4px;}
-.urg-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
-.urg-sub{font-size:10px;color:var(--tx3);margin-top:3px;}
-.br{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap;}
-.bpill{font-size:11px;font-weight:600;padding:4px 13px;border-radius:var(--pill);border:1px solid;letter-spacing:.2px;}
-.bac{background:var(--acl);color:var(--ac);border-color:var(--acm);}
-.btc{background:var(--blb);color:var(--bl);border-color:rgba(30,64,175,.2);}
-.bop{background:var(--grb);color:var(--gr);border-color:rgba(6,95,70,.2);}
-.bhy{background:var(--pub);color:var(--pu);border-color:rgba(91,33,182,.2);}
-.ben{background:var(--tlb);color:var(--tl);border-color:rgba(19,78,74,.2);}
-.bnt{background:var(--amb);color:var(--am);border-color:rgba(146,64,14,.2);}
-.bin{background:rgba(82,82,110,.08);color:var(--tx2);border-color:rgba(82,82,110,.22);}
-.sht{font-family:'DM Serif Display',serif;font-size:30px;line-height:1.22;margin-bottom:12px;letter-spacing:-.2px;color:var(--tx);}
-.shd{font-size:15px;color:var(--tx2);line-height:1.8;max-width:720px;}
-.exec-summary-row{display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(79,70,229,.1);}
-.exec-summary-lbl{font-size:12px;color:var(--tx3);font-weight:600;flex:1;}
-#copy-toast{font-size:11px;color:var(--gr);font-weight:700;opacity:0;transition:opacity .3s;}
+/* ── HERO ── */
+.hero{background:#fff;border:1px solid #e4e4f0;border-radius:var(--r);padding:28px 30px;margin-bottom:var(--gap);box-shadow:var(--card-shadow);overflow:hidden;}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:18px;}
+.hero-body{flex:1;min-width:0;}
+.hero-meta{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;}
+.hpill{font-size:11px;font-weight:600;padding:4px 12px;border-radius:var(--pill);border:1px solid;}
+.hp-ind{background:#ede9fe;color:var(--pu);border-color:#c4b5fd;}
+.hp-type{background:var(--bll);color:var(--bl);border-color:#93c5fd;}
+.hp-bud{background:var(--grb);color:var(--gr);border-color:#6ee7b7;}
+.hp-time{background:#f0f0f8;color:var(--tx3);border-color:#d4d4e8;}
+.hero-title{font-family:'DM Serif Display',serif;font-size:26px;line-height:1.25;margin-bottom:10px;color:var(--tx);word-break:break-word;}
+.hero-diag{font-size:14px;color:var(--tx2);line-height:1.8;word-break:break-word;}
+.urg-pill{flex-shrink:0;text-align:center;padding:16px 20px;border-radius:var(--rs);border:1px solid #e4e4f0;min-width:100px;background:#fafafa;}
+.urg-n{font-family:'DM Serif Display',serif;font-size:38px;line-height:1;}
+.urg-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-top:3px;}
+.urg-sub{font-size:10px;color:var(--tx4);margin-top:4px;max-width:100px;line-height:1.4;}
+.hero-bar{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid #f0f0f8;gap:12px;}
+.hero-summary{font-size:13px;color:var(--tx2);flex:1;line-height:1.6;min-width:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+#copy-toast{font-size:11px;color:var(--gr);font-weight:700;opacity:0;transition:opacity .3s;white-space:nowrap;}
 
-/* cards */
-.gr2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
-.gr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:18px;}
-.card{padding:22px;background:rgba(255,255,255,.8);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,.95);box-shadow:var(--gs);border-radius:var(--r);}
-.ch{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--tx3);font-weight:700;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
-.cnew{font-size:10px;background:var(--acl);color:var(--ac);padding:2px 8px;border-radius:var(--pill);font-weight:700;}
-.cdot{width:7px;height:7px;border-radius:50%;background:var(--ac);}
+/* ── CARDS ── */
+.card{background:var(--card-bg);border:var(--card-border);border-radius:var(--r);padding:var(--pad);box-shadow:var(--card-shadow);overflow:hidden;word-break:break-word;}
+.ch{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--tx4);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.ch-dot{width:6px;height:6px;border-radius:50%;background:var(--acb);flex-shrink:0;}
+.cnew{font-size:9px;background:var(--acl);color:var(--acb);padding:2px 7px;border-radius:var(--pill);font-weight:700;letter-spacing:.5px;}
+.gr2{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);margin-bottom:var(--gap);}
+.gr1{margin-bottom:var(--gap);}
 
-/* proof */
-.proofbox{border-left:3px solid var(--ac);padding:14px 16px;margin-bottom:12px;border-radius:0 var(--rs) var(--rs) 0;background:rgba(79,70,229,.055);}
+/* ── PROOF ── */
+.proofbox{border-left:3px solid var(--acb);padding:13px 15px;margin-bottom:11px;border-radius:0 var(--rs) var(--rs) 0;background:#fafaff;overflow:hidden;}
 .proofbox:last-child{margin-bottom:0;}
-.pco-row{display:flex;align-items:center;gap:8px;margin-bottom:3px;}
+.pco-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:3px;flex-wrap:wrap;}
 .pco{font-weight:700;font-size:14px;color:var(--tx);}
-.pmeta{font-size:11px;color:var(--tx3);margin-bottom:8px;font-weight:600;}
+.pmeta{font-size:11px;color:var(--tx4);margin-bottom:7px;font-weight:600;}
 .ptxt{font-size:13px;color:var(--tx2);line-height:1.7;}
-.pnums{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;}
-.pnum{text-align:center;}
-.pnv{font-family:'DM Serif Display',serif;font-size:17px;color:var(--gr);line-height:1;}
-.pnl{font-size:10px;color:var(--tx3);letter-spacing:.5px;margin-top:2px;font-weight:600;}
-.pkey{margin-top:9px;font-size:12px;color:var(--tx2);background:rgba(79,70,229,.06);border-radius:8px;padding:7px 10px;line-height:1.6;}
-.conf-badge{font-size:10px;padding:2px 8px;border-radius:var(--pill);font-weight:700;letter-spacing:.3px;}
-.conf-v{background:var(--grl);color:var(--gr);}
-.conf-b{background:var(--aml);color:var(--am);}
-.conf-e{background:var(--rdl);color:var(--rd);}
+.pnums{display:flex;gap:14px;margin-top:9px;flex-wrap:wrap;}
+.pnv{font-family:'DM Serif Display',serif;font-size:16px;color:var(--gr);line-height:1;}
+.pnl{font-size:9px;color:var(--tx4);letter-spacing:.5px;margin-top:2px;font-weight:600;text-transform:uppercase;}
+.pkey{margin-top:8px;font-size:12px;color:var(--tx2);background:#f0f0fa;border-radius:6px;padding:7px 10px;line-height:1.6;}
+.cbadge{font-size:10px;padding:2px 8px;border-radius:var(--pill);font-weight:700;white-space:nowrap;flex-shrink:0;}
+.cbv{background:var(--grb);color:var(--gr);}
+.cbb{background:var(--aml);color:var(--am);}
+.cbe{background:var(--rdl);color:var(--rd);}
 
-/* comparison table */
-.ctbl{width:100%;border-collapse:collapse;font-size:13px;}
-.ctbl th{background:rgba(79,70,229,.08);color:var(--tx2);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.8px;padding:10px 13px;text-align:left;border-bottom:2px solid rgba(79,70,229,.15);}
-.ctbl td{padding:9px 13px;border-bottom:1px solid rgba(79,70,229,.08);color:var(--tx);font-size:13px;vertical-align:top;line-height:1.5;}
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.ctbl{width:100%;border-collapse:collapse;font-size:13px;min-width:520px;}
+.ctbl th{background:#f5f5ff;color:var(--tx2);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.8px;padding:9px 12px;text-align:left;border-bottom:2px solid #e4e4f0;white-space:nowrap;}
+.ctbl td{padding:9px 12px;border-bottom:1px solid #f0f0f8;color:var(--tx);font-size:13px;vertical-align:top;line-height:1.5;}
 .ctbl tr:last-child td{border-bottom:none;}
-.ctbl tr:hover td{background:rgba(79,70,229,.03);}
-.td-g{color:var(--gr);font-weight:700;}
-.td-r{color:var(--rd);font-weight:600;}
-.td-a{color:var(--am);font-weight:600;}
+.ctbl tr:hover td{background:#fafaff;}
+.tdg{color:var(--gr);font-weight:700;}
+.tdr{color:var(--rd);}
 
-/* budget */
-.brow{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(79,70,229,.08);}
+/* ── BUDGET ── */
+.brow{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid #f0f0f8;gap:12px;}
 .brow:last-child{border-bottom:none;}
-.bk{font-size:13px;color:var(--tx2);font-weight:500;}
-.bv{font-weight:700;font-size:13px;color:var(--ac);text-align:right;max-width:200px;}
-.fnote{background:var(--acl);border-radius:10px;padding:10px 13px;margin-top:12px;font-size:12px;color:var(--tx2);line-height:1.65;}
+.bk{font-size:13px;color:var(--tx2);}
+.bv{font-weight:700;font-size:13px;color:var(--acb);text-align:right;min-width:0;word-break:break-word;max-width:55%;}
+.fnote{background:#f5f5ff;border-radius:8px;padding:10px 13px;margin-top:12px;font-size:12px;color:var(--tx2);line-height:1.65;}
 
-/* kpi */
-.krow{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid rgba(79,70,229,.08);}
+/* ── KPI ── */
+.krow{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #f0f0f8;}
 .krow:last-child{border-bottom:none;}
-.karr{width:26px;height:26px;border-radius:var(--pill);background:var(--grb);color:var(--gr);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;font-weight:700;}
+.karr{width:24px;height:24px;border-radius:var(--pill);background:var(--grl);color:var(--gr);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-weight:700;margin-top:1px;}
 .kn{font-size:13px;font-weight:700;color:var(--tx);}
-.kd{font-size:11px;color:var(--tx3);margin-top:1px;}
+.kd{font-size:11px;color:var(--tx3);margin-top:1px;line-height:1.5;}
 
-/* competitor */
-.crow{display:flex;align-items:flex-start;gap:9px;padding:10px 0;border-bottom:1px solid rgba(79,70,229,.08);}
+/* ── COMPETITOR ── */
+.crow{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px solid #f0f0f8;}
 .crow:last-child{border-bottom:none;}
 .cn{font-size:13px;font-weight:700;color:var(--tx);}
 .cd{font-size:12px;color:var(--tx2);line-height:1.55;margin-top:2px;}
-.spill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--pill);white-space:nowrap;}
-.sp-d{background:var(--grl);color:var(--gr);}
+.spill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--pill);white-space:nowrap;flex-shrink:0;}
+.sp-d{background:var(--grb);color:var(--gr);}
 .sp-e{background:var(--bll);color:var(--bl);}
 .sp-b{background:var(--rdl);color:var(--rd);}
 
-/* tech */
-.techbox{border:1px solid rgba(79,70,229,.12);border-radius:var(--rs);padding:14px 16px;margin-bottom:10px;background:rgba(255,255,255,.72);transition:border-color .2s;}
-.techbox:hover{border-color:rgba(79,70,229,.28);}
+/* ── RADAR ── */
+.radar-wrap{display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;}
+.radar-svg-box{flex-shrink:0;}
+.rl-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f4f4fc;}
+.rl-item:last-child{border-bottom:none;}
+.rl-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.rl-name{font-size:12px;font-weight:600;color:var(--tx);flex:1;min-width:0;}
+.rl-bar-wrap{width:70px;height:4px;background:#e8e8f4;border-radius:var(--pill);overflow:hidden;flex-shrink:0;}
+.rl-bar-fill{height:100%;border-radius:var(--pill);}
+.rl-score{font-size:12px;font-weight:700;color:var(--acb);width:28px;text-align:right;flex-shrink:0;}
+
+/* ── TECH ── */
+.techbox{border:1px solid #eaeaf4;border-radius:var(--rs);padding:13px 15px;margin-bottom:9px;background:#fafafa;overflow:hidden;}
 .techbox:last-child{margin-bottom:0;}
-.tech-cat{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--ac);font-weight:700;margin-bottom:3px;}
-.tech-name{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;}
+.tech-cat{font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--acb);font-weight:700;margin-bottom:3px;}
+.tech-nm{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;}
 .tech-why{font-size:13px;color:var(--tx2);line-height:1.65;margin-bottom:6px;}
 .tech-price{font-size:12px;font-weight:700;color:var(--gr);}
-.tech-alts{font-size:11px;color:var(--tx3);margin-top:3px;}
+.tech-alts{font-size:11px;color:var(--tx4);margin-top:3px;}
 
-/* risk */
-.riskbox{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid rgba(79,70,229,.08);}
+/* ── RISK ── */
+.riskbox{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f0f0f8;}
 .riskbox:last-child{border-bottom:none;}
-.risk-badges{display:flex;flex-direction:column;gap:4px;flex-shrink:0;min-width:70px;}
-.rbadge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:var(--pill);letter-spacing:.4px;text-align:center;}
+.rbadges{display:flex;flex-direction:column;gap:3px;flex-shrink:0;width:68px;}
+.rbadge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:var(--pill);letter-spacing:.4px;text-align:center;}
 .rb-h{background:var(--rdl);color:var(--rd);}
 .rb-m{background:var(--aml);color:var(--am);}
-.rb-l{background:var(--grl);color:var(--gr);}
+.rb-l{background:var(--grb);color:var(--gr);}
 .risk-title{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:3px;}
 .risk-mit{font-size:12px;color:var(--tx2);line-height:1.6;}
-.risk-owner{font-size:11px;color:var(--tx3);margin-top:3px;font-weight:600;}
+.risk-owner{font-size:10px;color:var(--tx4);margin-top:3px;font-weight:600;}
 
-/* quick wins */
-.qwbox{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(79,70,229,.08);}
+/* ── QUICK WINS ── */
+.qw-prog-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:8px 12px;background:#f5f5ff;border-radius:var(--rs);}
+.qw-prog-bar{flex:1;height:4px;background:#e0e0ef;border-radius:var(--pill);overflow:hidden;}
+.qw-prog-fill{height:100%;background:var(--acb);border-radius:var(--pill);transition:width .4s;}
+.qw-prog-txt{font-size:11px;font-weight:700;color:var(--acb);white-space:nowrap;}
+.qwbox{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #f0f0f8;}
 .qwbox:last-child{border-bottom:none;}
-.qw-chk{width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(79,70,229,.28);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:1px;}
-.qw-chk.done{background:var(--gr);border-color:var(--gr);color:#fff;}
-.qw-action{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:3px;}
-.qw-meta{font-size:11px;color:var(--tx3);}
+.qwchk{width:18px;height:18px;border-radius:5px;border:1.5px solid #d4d4e8;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:2px;font-size:9px;color:transparent;}
+.qwchk.done{background:var(--gr);border-color:var(--gr);color:#fff;}
+.qw-action{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:2px;}
+.qw-meta{font-size:11px;color:var(--tx4);}
 .qw-impact{font-size:12px;color:var(--gr);font-weight:700;margin-top:2px;}
-.qw-progress{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:9px 12px;background:var(--acl);border-radius:var(--rs);}
-.qw-prog-bar{flex:1;height:5px;background:rgba(79,70,229,.15);border-radius:var(--pill);overflow:hidden;}
-.qw-prog-fill{height:100%;background:var(--ac);border-radius:var(--pill);transition:width .4s;}
-.qw-prog-txt{font-size:11px;font-weight:700;color:var(--ac);white-space:nowrap;}
 
-/* maturity radar */
-.radar-wrap{display:flex;align-items:center;gap:20px;}
-.radar-svg-box{flex-shrink:0;}
-.radar-legend{flex:1;display:flex;flex-direction:column;gap:8px;}
-.rl-item{display:flex;align-items:center;gap:8px;}
-.rl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-.rl-name{font-size:12px;font-weight:700;color:var(--tx);flex:1;}
-.rl-score{font-size:12px;font-weight:700;color:var(--ac);}
-.rl-bar{flex:1;height:4px;background:rgba(79,70,229,.1);border-radius:var(--pill);overflow:hidden;}
-.rl-fill{height:100%;background:var(--ac);border-radius:var(--pill);}
-
-/* persona tabs */
-.ptabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px;}
-.ptab{background:rgba(255,255,255,.82);border:1.5px solid rgba(79,70,229,.16);color:var(--tx2);padding:7px 18px;border-radius:var(--pill);cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;transition:all .2s;}
-.ptab:hover{border-color:var(--ac);color:var(--ac);}
-.ptab.active{background:var(--ac);color:#fff;border-color:var(--ac);box-shadow:0 4px 12px rgba(79,70,229,.3);}
+/* ── PERSONAS ── */
+.ptabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px;}
+.ptab{background:#fff;border:1.5px solid #d4d4e8;color:var(--tx3);padding:7px 16px;border-radius:var(--pill);cursor:pointer;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.ptab:hover{border-color:var(--acb);color:var(--acb);}
+.ptab.active{background:var(--acb);color:#fff;border-color:var(--acb);}
 .ppanel{display:none;}.ppanel.active{display:block;}
-.phero{background:rgba(255,255,255,.9);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);border-radius:var(--rs);padding:22px;margin-bottom:12px;}
-.prole{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--ac);font-weight:700;margin-bottom:5px;}
-.phl{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:9px;line-height:1.3;color:var(--tx);}
+.phero{background:#fafaff;border:1px solid #eaeaf4;border-radius:var(--rs);padding:18px 20px;margin-bottom:11px;}
+.prole{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--acb);font-weight:700;margin-bottom:5px;}
+.phl{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:8px;line-height:1.3;color:var(--tx);word-break:break-word;}
 .pmsg{font-size:14px;color:var(--tx2);line-height:1.8;}
-.mr{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:16px;}
-.mbox{background:rgba(79,70,229,.06);border-radius:10px;padding:13px;}
-.mlbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin-bottom:5px;font-weight:700;}
-.mv{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ac);}
-.mc{font-size:11px;color:var(--tx3);margin-top:3px;font-weight:500;}
-.dpills{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;}
-.dpill{background:var(--acl);color:var(--tx2);font-size:12px;padding:5px 12px;border-radius:var(--pill);border:1px solid var(--acm);font-weight:500;}
-.ib{background:var(--acl);border:1px solid var(--acm);border-radius:var(--rs);padding:11px 14px;margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7;}
-.ib strong{color:var(--ac);font-weight:700;}
-.wb2{background:var(--rdb);border:1px solid rgba(153,27,27,.18);border-radius:var(--rs);padding:11px 14px;margin-top:9px;font-size:13px;color:var(--tx2);line-height:1.7;}
-.wb2 strong{color:var(--rd);font-weight:700;}
+.mr{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;}
+.mbox{background:#fff;border:1px solid #eaeaf4;border-radius:8px;padding:12px;}
+.mlbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--tx4);margin-bottom:5px;font-weight:700;}
+.mv{font-family:'DM Serif Display',serif;font-size:19px;color:var(--acb);}
+.mc{font-size:11px;color:var(--tx4);margin-top:2px;}
+.dpills{display:flex;flex-wrap:wrap;gap:5px;margin-top:11px;}
+.dpill{background:#f5f5ff;color:var(--tx2);font-size:12px;padding:5px 11px;border-radius:var(--pill);border:1px solid #e0e0f0;font-weight:500;}
+.ib{background:#f5f5ff;border:1px solid #e0e0f0;border-radius:var(--rs);padding:10px 13px;margin-top:9px;font-size:13px;color:var(--tx2);line-height:1.7;overflow:hidden;word-break:break-word;}
+.ib strong{color:var(--acb);font-weight:700;}
+.wbox{background:#fff5f5;border:1px solid #fecaca;border-radius:var(--rs);padding:10px 13px;margin-top:8px;font-size:13px;color:var(--tx2);line-height:1.7;overflow:hidden;word-break:break-word;}
+.wbox strong{color:var(--rd);font-weight:700;}
 .lp{list-style:none;margin-top:9px;}
-.lp li{padding:6px 0;border-bottom:1px solid rgba(79,70,229,.08);font-size:13px;color:var(--tx2);display:flex;gap:9px;align-items:flex-start;line-height:1.6;}
-.lp li::before{content:'→';color:var(--ac);flex-shrink:0;font-weight:700;}
+.lp li{padding:6px 0;border-bottom:1px solid #f0f0f8;font-size:13px;color:var(--tx2);display:flex;gap:9px;align-items:flex-start;line-height:1.6;}
+.lp li::before{content:'→';color:var(--acb);flex-shrink:0;font-weight:700;}
 .lp li:last-child{border-bottom:none;}
 
-/* roadmap */
-.rphase{display:flex;gap:14px;margin-bottom:16px;}
+/* ── ROADMAP ── */
+.rphase{display:flex;gap:13px;margin-bottom:14px;}
 .rl{display:flex;flex-direction:column;align-items:center;}
-.rdot{width:13px;height:13px;border-radius:50%;background:var(--ac);flex-shrink:0;box-shadow:0 0 0 3px rgba(79,70,229,.14);}
-.rline{width:2px;flex:1;background:linear-gradient(to bottom,rgba(79,70,229,.28),rgba(79,70,229,.03));margin-top:5px;}
+.rdot{width:12px;height:12px;border-radius:50%;background:var(--acb);flex-shrink:0;box-shadow:0 0 0 3px rgba(79,70,229,.12);}
+.rline{width:2px;flex:1;background:linear-gradient(to bottom,rgba(79,70,229,.22),rgba(79,70,229,.03));margin-top:4px;}
 .rphase:last-child .rline{display:none;}
-.rcont{flex:1;padding-bottom:16px;}
-.rpl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--ac);font-weight:700;margin-bottom:3px;}
-.rti{font-size:15px;font-weight:700;margin-bottom:3px;color:var(--tx);}
-.ra{font-size:13px;color:var(--tx2);line-height:1.75;}
-.rmil{display:inline-block;background:var(--grl);color:var(--gr);font-size:11px;font-weight:700;padding:3px 11px;border-radius:var(--pill);margin-top:7px;border:1px solid rgba(6,95,70,.2);}
+.rcont{flex:1;padding-bottom:14px;min-width:0;}
+.rpl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--acb);font-weight:700;margin-bottom:3px;}
+.rti{font-size:14px;font-weight:700;margin-bottom:3px;color:var(--tx);}
+.ra{font-size:13px;color:var(--tx2);line-height:1.75;word-break:break-word;}
+.rmil{display:inline-block;background:var(--grb);color:var(--gr);font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--pill);margin-top:6px;border:1px solid rgba(6,95,70,.18);}
 
-/* Citations — dark prominent card */
-.citations-card{background:#1a1a2e;border-radius:var(--r);padding:24px;margin-top:18px;border:1px solid rgba(79,70,229,.3);}
-.cit-header{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.5);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
-.cit-header-dot{width:8px;height:8px;border-radius:50%;background:#4f46e5;}
-.cit-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);}
+/* ── CITATIONS ── */
+.cit-card{background:#1a1833;border-radius:var(--r);padding:22px;margin-top:var(--gap);border:1px solid rgba(79,70,229,.25);overflow:hidden;}
+.cit-hdr{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.45);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+.cit-hdr-dot{width:7px;height:7px;border-radius:50%;background:var(--acb);flex-shrink:0;}
+.cit-item{display:flex;gap:11px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06);align-items:flex-start;}
 .cit-item:last-child{border-bottom:none;}
-.cit-num{font-size:11px;font-weight:700;color:rgba(79,70,229,.7);width:20px;flex-shrink:0;margin-top:2px;}
-.cit-body{flex:1;}
-.cit-title{font-size:13px;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:3px;line-height:1.4;}
-.cit-url{font-size:11px;color:rgba(79,70,229,.8);text-decoration:none;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.cit-url:hover{color:#818cf8;text-decoration:underline;}
-.cit-domain{display:inline-block;font-size:10px;background:rgba(79,70,229,.2);color:rgba(255,255,255,.6);padding:2px 8px;border-radius:var(--pill);margin-top:4px;font-weight:600;letter-spacing:.3px;}
-.cit-queries{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07);}
-.cit-q-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.35);margin-bottom:8px;}
-.cit-chips{display:flex;flex-wrap:wrap;gap:6px;}
-.cit-chip{font-size:11px;color:rgba(255,255,255,.55);padding:4px 10px;border-radius:var(--pill);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);}
+.cit-n{font-size:10px;font-weight:700;color:rgba(79,70,229,.8);width:22px;flex-shrink:0;margin-top:2px;}
+.cit-body{flex:1;min-width:0;overflow:hidden;}
+.cit-title{font-size:13px;font-weight:600;color:rgba(255,255,255,.88);margin-bottom:3px;word-break:break-word;}
+.cit-domain{display:inline-block;font-size:10px;background:rgba(79,70,229,.22);color:rgba(255,255,255,.6);padding:2px 8px;border-radius:var(--pill);margin-bottom:4px;font-weight:600;letter-spacing:.3px;}
+.cit-url{font-size:11px;color:rgba(100,120,255,.75);text-decoration:none;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;}
+.cit-url:hover{color:#818cf8;}
+.cit-q-section{margin-top:12px;padding-top:11px;border-top:1px solid rgba(255,255,255,.06);}
+.cit-q-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);margin-bottom:7px;}
+.cit-chips{display:flex;flex-wrap:wrap;gap:5px;}
+.cit-chip{font-size:11px;color:rgba(255,255,255,.5);padding:3px 9px;border-radius:var(--pill);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px;}
 
-@media print{
-  body{background:#fff!important;}body::before,body::after{display:none;}
-  .dn,.signals-bar{display:none!important;}#dashboard{display:block!important;}
-  .card,.sh,.proofbox,.techbox{box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:1px solid #e5e5f0!important;background:#fff!important;}
-  .citations-card{background:#f5f5ff!important;border:1px solid #c7c7f0!important;}
-  .cit-title{color:#0d0d1c!important;}.cit-url{color:#4f46e5!important;}.cit-domain{color:#252540!important;}
-  .btn-green,.btn-blue,.btn-sm{display:none!important;}
-  .ptabs{display:none!important;}.ppanel{display:block!important;border-bottom:1px solid #eee;padding-bottom:14px;margin-bottom:14px;}
-}
-@media(max-width:700px){
-  .gr2,.gr3{grid-template-columns:1fr;}
+@media(max-width:680px){
+  .gr2{grid-template-columns:1fr;}
   .ig{grid-template-columns:repeat(2,1fr);}
   .mr{grid-template-columns:1fr 1fr;}
-  .lt{font-size:36px;}
+  .lt{font-size:34px;}
   .sbar{grid-template-columns:repeat(2,1fr);border-radius:var(--r);}
-  .stat:nth-child(1),.stat:nth-child(3){border-right:1px solid rgba(79,70,229,.1);}
+  .stat:nth-child(1),.stat:nth-child(3){border-right:1px solid #f0f0f8;}
   .stat:nth-child(2),.stat:nth-child(4){border-right:none;}
-  .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid rgba(79,70,229,.1);}
-  .sh-top{flex-direction:column;}.urgency-box{align-self:flex-start;}
+  .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid #f0f0f8;}
+  .hero-top{flex-direction:column;}
+  .urg-pill{align-self:flex-start;}
+  .dbody{padding:16px 12px;}
+  .dn{padding:9px 14px;}
   .radar-wrap{flex-direction:column;}
-  .sh{padding:20px 18px;}.dbody{padding:18px 12px;}
-  .dn{padding:10px 14px;}.signals-bar{padding:8px 14px;}
+  .fr{grid-template-columns:1fr;}
+  .nav-r{gap:5px;}
 }
 </style>
 </head>
@@ -360,9 +340,9 @@ body::after{content:'';position:fixed;bottom:-15%;left:-8%;width:50vw;height:50v
 <!-- ══ LANDING ══ -->
 <div id="landing">
   <div class="land-box">
-    <div class="lbadge">Gemini 2.5 Flash-Lite · Live Google Search · 1,000 req/day free</div>
+    <div class="lbadge">Gemini 2.5 Flash-Lite · Live Search · 1,000 req/day free</div>
     <h1 class="lt">The Enterprise Intelligence<br><em>Consultant That Never Sleeps</em></h1>
-    <p class="ls">Real solutions proven by named companies. Budget-constrained from day one. Every recommendation cited to a live source. Delivered in the language of your entire C-suite.</p>
+    <p class="ls">Real solutions proven by named companies. Budget-constrained from day one. Every insight cited to a live source. Delivered in the language of your CEO, CFO, CTO and beyond.</p>
     <div class="sbar">
       <div class="stat"><div class="sn">Live</div><div class="sl2">Web-grounded</div></div>
       <div class="stat"><div class="sn">24+</div><div class="sl2">Industries</div></div>
@@ -380,8 +360,8 @@ body::after{content:'';position:fixed;bottom:-15%;left:-8%;width:50vw;height:50v
       <span class="itag">💊 Pharma</span><span class="itag">🏗️ Construction</span>
       <span class="itag">📚 Education</span><span class="itag">🏘️ Real Estate</span>
     </div>
-    <div class="hist-section" id="hist-section" style="display:none">
-      <div class="hist-title">Recent analyses</div>
+    <div class="hist-sec" id="hist-sec" style="display:none">
+      <div class="hist-hdr">Recent analyses</div>
       <div id="hist-list"></div>
     </div>
   </div>
@@ -398,32 +378,32 @@ body::after{content:'';position:fixed;bottom:-15%;left:-8%;width:50vw;height:50v
     <div class="wlbl" id="wlbl">Step 1 of 4</div>
   </div>
   <div class="step active" id="s1">
-    <div class="ey">Step 1</div><div class="stt">What industry are you in?</div>
-    <div class="ss">OptiCore searches sector-specific real deployments, verified vendor pricing, and actual ROI benchmarks for your exact industry — not generic advice.</div>
+    <div class="ey">Step 1</div><div class="stt">Select your industry</div>
+    <div class="ss">OptiCore searches sector-specific real deployments, verified vendor pricing, and actual ROI benchmarks for your exact industry.</div>
     <div class="ig">
       <div class="ic" onclick="selI(this,'Manufacturing')"><div class="ii">⚙️</div><div class="in">Manufacturing</div><div class="isb">Discrete & process</div></div>
       <div class="ic" onclick="selI(this,'Oil & Gas')"><div class="ii">🛢️</div><div class="in">Oil & Gas</div><div class="isb">Upstream · midstream · downstream</div></div>
       <div class="ic" onclick="selI(this,'Healthcare')"><div class="ii">🏥</div><div class="in">Healthcare</div><div class="isb">Hospitals · clinics · pharma</div></div>
-      <div class="ic" onclick="selI(this,'Legal')"><div class="ii">⚖️</div><div class="in">Legal</div><div class="isb">Law firms · in-house counsel</div></div>
+      <div class="ic" onclick="selI(this,'Legal')"><div class="ii">⚖️</div><div class="in">Legal</div><div class="isb">Law firms · in-house</div></div>
       <div class="ic" onclick="selI(this,'Telecom')"><div class="ii">📡</div><div class="in">Telecom</div><div class="isb">Operators · ISPs · MSOs</div></div>
       <div class="ic" onclick="selI(this,'Cloud / SaaS')"><div class="ii">☁️</div><div class="in">Cloud / SaaS</div><div class="isb">Software & infrastructure</div></div>
       <div class="ic" onclick="selI(this,'Electrical / Energy')"><div class="ii">⚡</div><div class="in">Electrical / Energy</div><div class="isb">Utilities · renewables · grid</div></div>
       <div class="ic" onclick="selI(this,'Banking & Finance')"><div class="ii">🏦</div><div class="in">Banking & Finance</div><div class="isb">Retail · investment · insurance</div></div>
-      <div class="ic" onclick="selI(this,'Steel & Metals')"><div class="ii">🔩</div><div class="in">Steel & Metals</div><div class="isb">Primary & secondary production</div></div>
-      <div class="ic" onclick="selI(this,'Retail & E-Commerce')"><div class="ii">🛒</div><div class="in">Retail & E-Commerce</div><div class="isb">Omnichannel · DTC · marketplace</div></div>
-      <div class="ic" onclick="selI(this,'Logistics & Supply Chain')"><div class="ii">🚚</div><div class="in">Logistics & Supply Chain</div><div class="isb">3PL · freight · last-mile</div></div>
+      <div class="ic" onclick="selI(this,'Steel & Metals')"><div class="ii">🔩</div><div class="in">Steel & Metals</div><div class="isb">Primary & secondary</div></div>
+      <div class="ic" onclick="selI(this,'Retail & E-Commerce')"><div class="ii">🛒</div><div class="in">Retail & E-Commerce</div><div class="isb">Omnichannel · DTC</div></div>
+      <div class="ic" onclick="selI(this,'Logistics & Supply Chain')"><div class="ii">🚚</div><div class="in">Logistics & Supply</div><div class="isb">3PL · freight · last-mile</div></div>
       <div class="ic" onclick="selI(this,'Gaming')"><div class="ii">🎮</div><div class="in">Gaming</div><div class="isb">Mobile · PC · console</div></div>
-      <div class="ic" onclick="selI(this,'Pharma / Life Sciences')"><div class="ii">💊</div><div class="in">Pharma / Life Sciences</div><div class="isb">R&D · manufacturing · distribution</div></div>
-      <div class="ic" onclick="selI(this,'Construction')"><div class="ii">🏗️</div><div class="in">Construction</div><div class="isb">Infrastructure · real estate dev</div></div>
-      <div class="ic" onclick="selI(this,'Education')"><div class="ii">📚</div><div class="in">Education</div><div class="isb">K-12 · higher ed · edtech</div></div>
+      <div class="ic" onclick="selI(this,'Pharma / Life Sciences')"><div class="ii">💊</div><div class="in">Pharma / Life Sciences</div><div class="isb">R&D · manufacturing</div></div>
+      <div class="ic" onclick="selI(this,'Construction')"><div class="ii">🏗️</div><div class="in">Construction</div><div class="isb">Infrastructure · dev</div></div>
+      <div class="ic" onclick="selI(this,'Education')"><div class="ii">📚</div><div class="in">Education</div><div class="isb">K-12 · higher ed</div></div>
       <div class="ic" onclick="selI(this,'Other')"><div class="ii">🏢</div><div class="in">Other</div><div class="isb">Describe below</div></div>
     </div>
     <div class="fg" id="oiw" style="display:none"><label class="fl">Describe your industry</label><input class="fi" id="otherI" placeholder="e.g. Insurance, Mining, Aerospace..."/></div>
     <button class="btn-n" onclick="nxt(2)">Next: Company Profile →</button>
   </div>
   <div class="step" id="s2">
-    <div class="ey">Step 2</div><div class="stt">Tell us about your company</div>
-    <div class="ss">Precise inputs unlock precise recommendations. OptiCore filters out solutions that don't fit your scale, region, or existing infrastructure.</div>
+    <div class="ey">Step 2</div><div class="stt">Company profile</div>
+    <div class="ss">Precise inputs unlock precise recommendations. OptiCore filters out solutions that don't fit your scale, region, or infrastructure.</div>
     <div class="fr">
       <div class="fg"><label class="fl">Annual revenue (USD)</label>
         <select class="fi-sel" id="rev"><option value="">Select...</option><option>Under $5M</option><option>$5M – $25M</option><option>$25M – $100M</option><option>$100M – $500M</option><option>$500M – $2B</option><option>$2B+</option></select></div>
@@ -431,21 +411,21 @@ body::after{content:'';position:fixed;bottom:-15%;left:-8%;width:50vw;height:50v
         <select class="fi-sel" id="emp"><option value="">Select...</option><option>1–50</option><option>51–200</option><option>200–1,000</option><option>1,000–5,000</option><option>5,000–50,000</option><option>50,000+</option></select></div>
     </div>
     <div class="fr">
-      <div class="fg"><label class="fl">Geography / Market</label>
+      <div class="fg"><label class="fl">Geography</label>
         <select class="fi-sel" id="geo"><option value="">Select...</option><option>North America</option><option>Europe</option><option>Asia Pacific</option><option>India</option><option>Middle East</option><option>Latin America</option><option>Africa</option><option>Global</option></select></div>
       <div class="fg"><label class="fl">Company type</label>
         <select class="fi-sel" id="ctype"><option value="">Select...</option><option>Private company</option><option>Public listed</option><option>Family business</option><option>Government / PSU</option><option>Joint venture</option><option>Startup / Scale-up</option></select></div>
     </div>
-    <div class="fg"><label class="fl">Existing core systems / technology</label><input class="fi" id="tech" placeholder="e.g. SAP ERP, legacy SCADA, Siemens S7 PLCs, Oracle, no formal ERP..."/></div>
-    <div class="fg"><label class="fl">Primary challenge — be specific (drives accuracy)</label><textarea class="fi-ta" id="chall" placeholder="e.g. Our plant has 22% unplanned downtime costing $3M/yr. Equipment is 15 years old. We cannot replace hardware but need ROI within 12 months..."></textarea></div>
-    <button class="btn-n" onclick="nxt(3)">Next: Budget & Constraints →</button>
+    <div class="fg"><label class="fl">Existing core systems / technology</label><input class="fi" id="tech" placeholder="e.g. SAP ERP, Siemens PLCs, legacy SCADA, Oracle, no formal ERP..."/></div>
+    <div class="fg"><label class="fl">Primary challenge — be specific (this drives accuracy)</label><textarea class="fi-ta" id="chall" placeholder="e.g. Our plant has 22% unplanned downtime costing $3M/yr. Equipment is 15 years old — we cannot replace hardware but need ROI within 12 months..."></textarea></div>
+    <button class="btn-n" onclick="nxt(3)">Next: Budget →</button>
   </div>
   <div class="step" id="s3">
     <div class="ey">Step 3</div><div class="stt">Budget & constraints</div>
-    <div class="ss">OptiCore is budget-first — it only surfaces solutions you can execute. Constraints prevent irrelevant recommendations entirely.</div>
+    <div class="ss">OptiCore is budget-first — it only surfaces solutions you can execute. Hard constraints prevent irrelevant recommendations.</div>
     <div class="fg"><label class="fl">Available investment budget</label>
       <div class="bg2">
-        <div class="bc" onclick="selB(this,'Under $50K')"><div class="ba">Under $50K</div><div class="bt">Tactical improvements only</div></div>
+        <div class="bc" onclick="selB(this,'Under $50K')"><div class="ba">Under $50K</div><div class="bt">Tactical improvements</div></div>
         <div class="bc" onclick="selB(this,'$50K – $250K')"><div class="ba">$50K – $250K</div><div class="bt">Focused transformation</div></div>
         <div class="bc" onclick="selB(this,'$250K – $1M')"><div class="ba">$250K – $1M</div><div class="bt">Significant program</div></div>
         <div class="bc" onclick="selB(this,'$1M – $5M')"><div class="ba">$1M – $5M</div><div class="bt">Enterprise initiative</div></div>
@@ -453,18 +433,18 @@ body::after{content:'';position:fixed;bottom:-15%;left:-8%;width:50vw;height:50v
         <div class="bc" onclick="selB(this,'$20M+')"><div class="ba">$20M+</div><div class="bt">Full enterprise program</div></div>
       </div>
     </div>
-    <div class="fr" style="margin-top:18px">
+    <div class="fr" style="margin-top:16px">
       <div class="fg"><label class="fl">Budget type</label>
         <select class="fi-sel" id="btype"><option value="Prefer OpEx recurring">Prefer OpEx (recurring)</option><option value="Prefer CapEx one-time">Prefer CapEx (one-time)</option><option value="Flexible both OK">Flexible — both OK</option><option value="Phased approach preferred">Phased approach</option></select></div>
       <div class="fg"><label class="fl">Expected timeline</label>
         <select class="fi-sel" id="tline"><option value="Quick wins 0–3 months">Quick wins: 0–3 months</option><option value="Results 3–6 months">Results: 3–6 months</option><option value="6–12 month program">6–12 month program</option><option value="1–2 year transformation">1–2 year transformation</option><option value="Multi-year 3+">Multi-year (3+)</option></select></div>
     </div>
-    <div class="fg"><label class="fl">Hard constraints — critical, be specific</label><textarea class="fi-ta" style="min-height:65px" id="constr" placeholder="e.g. Cannot replace PLCs. Must be on-premise. ISO 27001. Union workforce. HIPAA mandatory. No rip-and-replace..."></textarea></div>
+    <div class="fg"><label class="fl">Hard constraints</label><textarea class="fi-ta" style="min-height:62px" id="constr" placeholder="e.g. Cannot replace PLCs. Must be on-premise. ISO 27001. Union workforce. HIPAA mandatory..."></textarea></div>
     <button class="btn-n" onclick="nxt(4)">Next: Pain Points →</button>
   </div>
   <div class="step" id="s4">
     <div class="ey">Step 4</div><div class="stt">What's hurting your business?</div>
-    <div class="ss">Select everything that applies. OptiCore prioritises the combination with the highest compounded ROI for your budget.</div>
+    <div class="ss">Select everything that applies. OptiCore prioritises the combination with the highest compounded ROI.</div>
     <div class="pg">
       <div class="pi" onclick="togP(this,'High operational costs')"><div class="pchk">✓</div>High operational costs</div>
       <div class="pi" onclick="togP(this,'Equipment downtime and reliability')"><div class="pchk">✓</div>Equipment downtime & reliability</div>
@@ -473,8 +453,8 @@ body::after{content:'';position:fixed;bottom:-15%;left:-8%;width:50vw;height:50v
       <div class="pi" onclick="togP(this,'Slow response to market changes')"><div class="pchk">✓</div>Slow response to market changes</div>
       <div class="pi" onclick="togP(this,'Quality control defects and rework')"><div class="pchk">✓</div>Quality defects & rework</div>
       <div class="pi" onclick="togP(this,'Supply chain inefficiency')"><div class="pchk">✓</div>Supply chain inefficiency</div>
-      <div class="pi" onclick="togP(this,'Customer churn and poor retention')"><div class="pchk">✓</div>Customer churn & poor retention</div>
-      <div class="pi" onclick="togP(this,'Compliance and regulatory exposure')"><div class="pchk">✓</div>Compliance & regulatory exposure</div>
+      <div class="pi" onclick="togP(this,'Customer churn and poor retention')"><div class="pchk">✓</div>Customer churn & retention</div>
+      <div class="pi" onclick="togP(this,'Compliance and regulatory exposure')"><div class="pchk">✓</div>Compliance & regulatory risk</div>
       <div class="pi" onclick="togP(this,'Scaling bottleneck')"><div class="pchk">✓</div>Scaling bottleneck</div>
       <div class="pi" onclick="togP(this,'Talent and skills gap')"><div class="pchk">✓</div>Talent & skills gap</div>
       <div class="pi" onclick="togP(this,'Losing market share to competitors')"><div class="pchk">✓</div>Losing market share</div>
@@ -490,18 +470,18 @@ body::after{content:'';position:fixed;bottom:-15%;left:-8%;width:50vw;height:50v
 
 <!-- ══ PROCESSING ══ -->
 <div id="processing">
-  <div class="g pc">
+  <div class="pc">
     <div class="prw"><div class="prr"></div><div class="pri">🔍</div></div>
     <div class="ptit" id="ptit">Searching Real-World Data</div>
     <div class="psub" id="psub">Live Google Search grounding active</div>
     <ul class="psteps">
       <li id="ps1"><span class="pdot"></span>Connecting to Google Search grounding...</li>
       <li id="ps2"><span class="pdot"></span>Finding 3 real comparative case studies...</li>
-      <li id="ps3"><span class="pdot"></span>Pulling competitor intelligence & benchmarks...</li>
-      <li id="ps4"><span class="pdot"></span>Verifying ROI, vendor pricing & timelines...</li>
+      <li id="ps3"><span class="pdot"></span>Pulling competitor & benchmark data...</li>
+      <li id="ps4"><span class="pdot"></span>Verifying ROI, vendor pricing, timelines...</li>
       <li id="ps5"><span class="pdot"></span>Building financial models (NPV, IRR, TCO)...</li>
       <li id="ps6"><span class="pdot"></span>Scoring maturity radar & urgency index...</li>
-      <li id="ps7"><span class="pdot"></span>Generating tech stack, risk matrix & 8 personas...</li>
+      <li id="ps7"><span class="pdot"></span>Generating tech stack, risk matrix, 8 personas...</li>
     </ul>
   </div>
 </div>
@@ -511,91 +491,77 @@ body::after{content:'';position:fixed;bottom:-15%;left:-8%;width:50vw;height:50v
   <nav class="dn">
     <div class="dlogo"><div class="dli">OC</div><div class="dln">Opti<em>Core</em></div></div>
     <div class="dmeta" id="dmeta"></div>
-    <div class="nav-btns">
-      <button class="btn-green" onclick="dlPDF()">⬇ PDF Report</button>
-      <button class="btn-blue" onclick="copyExecSummary()">📋 Copy Summary</button>
-      <button class="btn-sm" onclick="location.reload()">+ New Analysis</button>
+    <div class="nav-r">
+      <button class="btn-gr" onclick="dlPDF()">⬇ PDF Report</button>
+      <button class="btn-bl" onclick="copyExec()">📋 Copy Summary</button>
+      <button class="btn-ghost" onclick="location.reload()">+ New</button>
     </div>
   </nav>
-  <div class="signals-bar" id="signals-bar" style="display:none">
-    <span class="sig-label">Live signals</span>
-  </div>
-  <div class="dbody" id="pdf-content">
+  <div class="sigbar" id="sigbar"><span class="sig-lbl">Live signals</span><div class="sig-list" id="sig-list"></div></div>
+  <div class="dbody">
     <!-- Hero -->
-    <div class="sh">
-      <div class="sh-top">
-        <div class="sh-main">
-          <div class="br" id="sbadges"></div>
-          <div class="sht" id="stitle">—</div>
-          <div class="shd" id="sdiag">—</div>
+    <div class="hero gr1">
+      <div class="hero-top">
+        <div class="hero-body">
+          <div class="hero-meta" id="sbadges"></div>
+          <div class="hero-title" id="stitle">—</div>
+          <div class="hero-diag" id="sdiag">—</div>
         </div>
-        <div class="urgency-box" id="urg-box">
-          <div class="urg-score" id="urg-score">—</div>
-          <div class="urg-label" id="urg-label">Urgency</div>
+        <div class="urg-pill" id="urg-pill">
+          <div class="urg-n" id="urg-n">—</div>
+          <div class="urg-lbl" id="urg-lbl">Urgency</div>
           <div class="urg-sub" id="urg-sub"></div>
         </div>
       </div>
-      <div class="exec-summary-row">
-        <span class="exec-summary-lbl" id="exec-summary-preview">—</span>
+      <div class="hero-bar">
+        <div class="hero-summary" id="exec-prev">—</div>
         <span id="copy-toast">✓ Copied!</span>
       </div>
     </div>
 
-    <!-- Proof + Budget -->
+    <!-- Case studies + Budget -->
     <div class="gr2">
-      <div class="card"><div class="ch">Comparative case studies — real companies <span class="cdot"></span></div><div id="proofwrap"></div></div>
-      <div class="card"><div class="ch">Financial breakdown</div><div id="budwrap"></div></div>
+      <div class="card"><div class="ch"><span class="ch-dot"></span>Comparative case studies — real companies</div><div id="proofwrap"></div></div>
+      <div class="card"><div class="ch"><span class="ch-dot"></span>Financial breakdown</div><div id="budwrap"></div></div>
     </div>
 
-    <!-- Comparison table -->
-    <div class="card" style="margin-bottom:18px">
-      <div class="ch">Before vs after — industry benchmarks</div>
-      <div style="overflow-x:auto" id="comptablewrap"></div>
-    </div>
+    <!-- Before/After table -->
+    <div class="card gr1"><div class="ch"><span class="ch-dot"></span>Before vs after — industry benchmarks</div><div class="tbl-wrap" id="comptablewrap"></div></div>
 
     <!-- KPI + Competitor -->
     <div class="gr2">
-      <div class="card"><div class="ch">Industry KPI targets</div><div id="kpiwrap"></div></div>
-      <div class="card"><div class="ch">Competitor landscape</div><div id="compwrap"></div></div>
+      <div class="card"><div class="ch"><span class="ch-dot"></span>Industry KPI targets</div><div id="kpiwrap"></div></div>
+      <div class="card"><div class="ch"><span class="ch-dot"></span>Competitor landscape</div><div id="compwrap"></div></div>
     </div>
 
-    <!-- Maturity Radar + Quick Wins -->
+    <!-- Radar + Quick wins -->
     <div class="gr2">
-      <div class="card">
-        <div class="ch">Digital maturity score <span class="cnew">NEW</span></div>
-        <div class="radar-wrap" id="radarwrap"></div>
-      </div>
-      <div class="card">
-        <div class="ch">Quick wins — 30 days, low/no cost <span class="cnew">NEW</span></div>
-        <div id="qwwrap"></div>
-      </div>
+      <div class="card"><div class="ch"><span class="ch-dot"></span>Digital maturity score <span class="cnew">NEW</span></div><div class="radar-wrap" id="radarwrap"></div></div>
+      <div class="card"><div class="ch"><span class="ch-dot"></span>Quick wins — 30 days, low/no cost <span class="cnew">NEW</span></div><div id="qwwrap"></div></div>
     </div>
 
     <!-- Tech + Risk -->
     <div class="gr2">
-      <div class="card"><div class="ch">Technology stack recommendations</div><div id="techwrap"></div></div>
-      <div class="card"><div class="ch">Risk matrix</div><div id="riskwrap"></div></div>
+      <div class="card"><div class="ch"><span class="ch-dot"></span>Technology stack recommendations</div><div id="techwrap"></div></div>
+      <div class="card"><div class="ch"><span class="ch-dot"></span>Risk matrix</div><div id="riskwrap"></div></div>
     </div>
 
     <!-- Personas -->
-    <div class="card" style="margin-bottom:18px">
-      <div class="ch" style="margin-bottom:18px">Executive perspective — select your role</div>
+    <div class="card gr1">
+      <div class="ch" style="margin-bottom:14px"><span class="ch-dot"></span>Executive perspective — select your role</div>
       <div class="ptabs" id="ptabs"></div>
       <div id="ppanels"></div>
     </div>
 
     <!-- Roadmap -->
-    <div class="card" style="margin-bottom:18px">
-      <div class="ch">Implementation roadmap</div>
-      <div id="rmwrap" style="margin-top:10px"></div>
-    </div>
+    <div class="card gr1"><div class="ch"><span class="ch-dot"></span>Implementation roadmap</div><div id="rmwrap" style="margin-top:10px"></div></div>
 
-    <!-- Citations — dark card -->
-    <div class="citations-card" id="cit-card" style="display:none">
-      <div class="cit-header"><span class="cit-header-dot"></span>Research sources — live web citations</div>
+    <!-- Citations -->
+    <div class="cit-card" id="cit-card" style="display:none">
+      <div class="cit-hdr"><span class="cit-hdr-dot"></span>Research sources — live web citations</div>
       <div id="cit-list"></div>
-      <div class="cit-queries" id="cit-queries" style="display:none">
-        <div class="cit-q-label">Google Search queries used in this analysis</div>
+      <div class="cit-q-section" id="cit-q" style="display:none">
+        <div class="cit-q-lbl">Google Search queries used</div>
         <div class="cit-chips" id="cit-chips"></div>
       </div>
     </div>
@@ -613,25 +579,18 @@ function show(id){
   window.scrollTo(0,0);
 }
 
-// History
-function saveHist(ind,budget,title){
-  try{
-    const h=JSON.parse(localStorage.getItem('oc_history')||'[]');
-    h.unshift({ind,budget,title,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),ts:Date.now()});
-    localStorage.setItem('oc_history',JSON.stringify(h.slice(0,5)));
-  }catch(e){}
-}
 function loadHist(){
   try{
     const h=JSON.parse(localStorage.getItem('oc_history')||'[]');
     if(!h.length)return;
-    const sec=document.getElementById('hist-section');
-    const lst=document.getElementById('hist-list');
-    sec.style.display='block';
-    lst.innerHTML=h.map((x,i)=>`<div class="hist-item" onclick="alert('To re-run, click Start Enterprise Analysis and fill in the same details for: ${x.ind}')">
-      <div><div class="hist-ind">${x.ind} · ${x.budget}</div><div class="hist-meta">${x.date} · ${(x.title||'').substring(0,60)}${(x.title||'').length>60?'...':''}</div></div>
-      <span class="hist-arrow">↗</span></div>`).join('');
+    document.getElementById('hist-sec').style.display='block';
+    document.getElementById('hist-list').innerHTML=h.map(x=>`<div class="hist-row">
+      <div><div class="hist-ind">${x.ind||''} · ${x.budget||''}</div><div class="hist-meta">${x.date||''} · ${(x.title||'').substring(0,55)}${(x.title||'').length>55?'...':''}</div></div>
+      <span style="margin-left:auto;color:var(--acb);font-size:14px">↗</span></div>`).join('');
   }catch(e){}
+}
+function saveHist(ind,budget,title){
+  try{const h=JSON.parse(localStorage.getItem('oc_history')||'[]');h.unshift({ind,budget,title,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),ts:Date.now()});localStorage.setItem('oc_history',JSON.stringify(h.slice(0,5)));}catch(e){}
 }
 
 window.addEventListener('load',()=>{show('landing');loadHist();});
@@ -666,93 +625,37 @@ async function run(){
   const ind=D.ind==='Other'?(document.getElementById('otherI').value||'Other'):D.ind;
   show('processing');
   const steps=['ps1','ps2','ps3','ps4','ps5','ps6','ps7'];let si=0;
-  const tick=()=>{if(si>0)document.getElementById(steps[si-1]).classList.add('done');if(si<steps.length){document.getElementById(steps[si]).classList.add('active');si++;setTimeout(tick,580+Math.random()*480);}};tick();
+  const tick=()=>{if(si>0)document.getElementById(steps[si-1]).classList.add('done');if(si<steps.length){document.getElementById(steps[si]).classList.add('active');si++;setTimeout(tick,560+Math.random()*460);}};tick();
 
   try{
-    document.getElementById('ptit').textContent='Searching Real-World Data';
-    const rp=`You are an enterprise business intelligence researcher with live Google Search access. Find REAL VERIFIED data only.
+    const rp=`You are an enterprise business intelligence researcher with live Google Search. Find REAL VERIFIED data only — no fabrication.
 
 COMPANY: ${ind} | Revenue: ${D.rev||'unknown'} | Employees: ${D.emp||'unknown'} | Region: ${D.geo||'unspecified'} | Type: ${D.ctype||'private'} | Existing tech: ${D.tech||'unspecified'} | Budget: ${D.bud} | Timeline: ${D.tline} | Constraints: ${D.constr||'none'} | Challenge: ${D.chall||'general'} | Pain points: ${D.pains.join(', ')}
 
-Search Google for ALL of these:
-1. CASE STUDIES: 3 real named companies in ${ind} that solved these pain points. For each: name, year, specific vendor/technology, investment, measured ROI %, specific outcome (before and after with numbers), source URL.
-2. BENCHMARKS: Current ${ind} efficiency metrics, cost benchmarks, KPI targets from industry associations, Gartner, McKinsey, or trade journals. Include publication names and years.
-3. COMPETITORS: Which ${ind} companies deployed digital/operational transformation recently, what they did, when, competitive advantage gained. Include any press releases or news.
-4. VENDOR PRICING: Actual vendor pricing for solutions in ${ind} within ${D.bud}. Search vendor pricing pages directly.
-5. QUICK WINS: Documented ${ind} operational improvements costing under $20K with sub-30-day results. Process changes, training, workflow redesigns.
-6. MARKET SIGNALS: 3 recent (2024-2025) news events, regulations, or market developments specifically affecting ${ind} companies — things a CEO would cite when arguing for urgency.
+Search Google for ALL of these — cite actual source names/URLs for each:
+1. CASE STUDIES: 3 real named companies in ${ind} that solved these pain points. For each: company name, year, specific vendor/technology, investment, measured ROI %, specific outcome with numbers. Search vendor case study pages, press releases, annual reports.
+2. BENCHMARKS: Current ${ind} industry efficiency metrics, cost benchmarks from Gartner, McKinsey, industry associations, or trade journals.
+3. COMPETITORS: Named ${ind} companies ahead on digital/operational transformation — what they did, when, competitive advantage gained.
+4. VENDOR PRICING: Actual current pricing for solutions in ${ind} within ${D.bud} budget.
+5. QUICK WINS: Documented ${ind} operational improvements costing under $20K with under 30-day results.
+6. MARKET SIGNALS: 3 recent (2024-2025) news or regulatory developments affecting ${ind} companies that a CEO would cite as urgency.
 
-Be extremely specific. Real company names, real numbers, real URLs. State clearly when data is estimated vs. sourced.`;
+Be specific: real company names, real dollar figures, real percentages. State clearly if data is estimated vs sourced.`;
 
     const research=await callAPI('research',rp);
-    SRCS=research.sources||[];
-    QRS=research.queries||[];
+    SRCS=research.sources||[];QRS=research.queries||[];
 
     document.getElementById('ptit').textContent='Building Executive Report';
-    document.getElementById('psub').textContent='Structuring 8-persona analysis with maturity scores';
+    document.getElementById('psub').textContent='Structuring 8-persona analysis';
 
-    const sp=`Based on this verified research about ${ind}:
+    const sp=`Based on this verified research about ${ind}: ${research.text}
 
-${research.text}
+COMPANY: Revenue ${D.rev} | Employees ${D.emp} | Region ${D.geo} | Budget ${D.bud} (${D.btype}) | Timeline ${D.tline} | Constraints: ${D.constr||'none'} | Tech: ${D.tech||'unspecified'} | Challenge: ${D.chall||'general'} | Pains: ${D.pains.join(', ')}
 
-COMPANY: Revenue ${D.rev} | Employees ${D.emp} | Region ${D.geo} | Budget ${D.bud} (${D.btype}) | Timeline ${D.tline} | Constraints: ${D.constr||'none'} | Existing tech: ${D.tech||'unspecified'} | Challenge: ${D.chall||'general'} | Pains: ${D.pains.join(', ')}
+Use ONLY data from the research. Label each data point: "verified" (found in research), "benchmark" (from industry data), or "estimated" (reasoned). NEVER invent company names or ROI figures.
 
-Use ONLY data from the research above. Label each data point with confidence: "verified" (found in research), "benchmark" (from industry data), or "estimated" (reasoned from context). NEVER fabricate specific company names or ROI figures not found in research.
-
-Return a single JSON object (no other text):
-{
-  "solution_title":"string",
-  "solution_type":"Technical or Operational or Non-Technical or Environmental or Hybrid",
-  "problem_diagnosis":"precise 2-3 sentence diagnosis with cost quantification",
-  "urgency_score":75,
-  "urgency_reason":"1 sentence why this is urgent now",
-  "industry_signals":["signal 1 (recent market event)","signal 2","signal 3"],
-  "exec_summary":"3-sentence plain-language summary suitable for email to stakeholders",
-  "maturity_scores":{"digital_readiness":6,"process_maturity":5,"data_analytics":4,"talent_capability":6,"risk_compliance":7,"financial_health":5},
-  "proof_cases":[{
-    "company":"real name","industry":"sector","year":"year",
-    "situation_before":"specific before-state with numbers",
-    "solution_implemented":"exactly what they did",
-    "vendor":"specific vendor/technology",
-    "investment":"cost","outcome":"measured result with numbers",
-    "roi":"ROI % or payback","timeframe":"time to result",
-    "key_lesson":"what this teaches","confidence":"verified or benchmark or estimated"
-  }],
-  "comparison_table":[{
-    "metric":"metric","industry_average":"value",
-    "case1_before":"before","case1_after":"after","top_performer":"best in class"
-  }],
-  "competitor_benchmark":[{"name":"name","status":"deployed or exploring or behind","detail":"specific action"}],
-  "budget":{
-    "total_min":"min","total_max":"max","capex_portion":"amount",
-    "opex_annual":"annual","payback_months":18,"npv_3yr":"NPV",
-    "irr":"IRR","phase1_cost":"cost","phase1_desc":"deliverable",
-    "phase2_cost":"cost","phase2_desc":"deliverable","financing_note":"options"
-  },
-  "kpis":[{"name":"name","before":"current","after":"target","unit":"unit","benchmark":"top performer"}],
-  "tech_recommendations":[{
-    "category":"category","vendor":"vendor","product":"product",
-    "price_range":"cost","why_fits":"reasoning","compatibility":"with existing",
-    "alternatives":["alt1","alt2"]
-  }],
-  "quick_wins":[{
-    "action":"specific task","cost":"cost","timeline":"days",
-    "expected_impact":"measurable outcome","who_owns":"role"
-  }],
-  "risk_matrix":[{
-    "risk":"description","probability":"High or Medium or Low",
-    "impact":"High or Medium or Low","mitigation":"specific strategy","owner":"role"
-  }],
-  "personas":{
-    "ceo":{"headline":"headline","key_message":"2-3 sentences","metrics":[{"label":"l","value":"v","context":"c"}],"board_narrative":"verbatim board talking points","risk_of_inaction":"consequence"},
-    "cfo":{"headline":"headline","key_message":"2-3 sentences","metrics":[{"label":"l","value":"v","context":"c"}],"financing_options":["o1","o2"],"tax_note":"note","risk_note":"risk"},
-    "coo":{"headline":"headline","key_message":"2-3 sentences","metrics":[{"label":"l","value":"v","context":"c"}],"process_changes":["c1","c2","c3"],"headcount_impact":"impact","complexity":"Low or Medium or High"},
-    "cto":{"headline":"headline","key_message":"2-3 sentences","metrics":[{"label":"l","value":"v","context":"c"}],"tech_requirements":["r1","r2","r3"],"integration_note":"note","build_buy":"recommendation","risks":["r1","r2"]},
-    "cmo":{"headline":"headline","key_message":"2-3 sentences","metrics":[{"label":"l","value":"v","context":"c"}],"customer_impact":"impact","revenue_attribution":"attribution"},
-    "domain_expert":{"headline":"headline","key_message":"2-3 sentences","metrics":[{"label":"l","value":"v","context":"c"}],"compliance_impact":"compliance","professional_note":"note"}
-  },
-  "roadmap":[{"phase":"Phase 1","duration":"timeframe","title":"name","actions":["a1","a2"],"milestone":"success indicator"}]
-}`;
+Return ONLY a JSON object (no other text):
+{"solution_title":"string","solution_type":"Technical or Operational or Non-Technical or Environmental or Hybrid","problem_diagnosis":"2-3 sentence precise diagnosis with cost quantification","urgency_score":75,"urgency_reason":"1 sentence why urgent now","industry_signals":["signal 1","signal 2","signal 3"],"exec_summary":"3-sentence plain-language stakeholder email summary","maturity_scores":{"digital_readiness":6,"process_maturity":5,"data_analytics":4,"talent_capability":6,"risk_compliance":7,"financial_health":5},"proof_cases":[{"company":"name","industry":"sector","year":"year","situation_before":"specific with numbers","solution_implemented":"exactly what they did","vendor":"specific vendor","investment":"cost","outcome":"measured result with numbers","roi":"ROI % or payback","timeframe":"time","key_lesson":"lesson","confidence":"verified or benchmark or estimated"}],"comparison_table":[{"metric":"metric","industry_average":"value","case1_before":"before","case1_after":"after","top_performer":"best"}],"competitor_benchmark":[{"name":"name","status":"deployed or exploring or behind","detail":"specific action"}],"budget":{"total_min":"min","total_max":"max","capex_portion":"amount","opex_annual":"annual","payback_months":18,"npv_3yr":"NPV","irr":"IRR","phase1_cost":"cost","phase1_desc":"deliverable","phase2_cost":"cost","phase2_desc":"deliverable","financing_note":"options"},"kpis":[{"name":"name","before":"current","after":"target","unit":"unit","benchmark":"top performer"}],"tech_recommendations":[{"category":"category","vendor":"vendor","product":"product","price_range":"cost","why_fits":"reason","compatibility":"with existing","alternatives":["alt1","alt2"]}],"quick_wins":[{"action":"task","cost":"cost","timeline":"days","expected_impact":"outcome","who_owns":"role"}],"risk_matrix":[{"risk":"description","probability":"High or Medium or Low","impact":"High or Medium or Low","mitigation":"strategy","owner":"role"}],"personas":{"ceo":{"headline":"headline","key_message":"2-3 sentences","metrics":[{"label":"l","value":"v","context":"c"}],"board_narrative":"verbatim board talking points","risk_of_inaction":"consequence"},"cfo":{"headline":"headline","key_message":"2-3 sentences","metrics":[{"label":"l","value":"v","context":"c"}],"financing_options":["o1","o2"],"tax_note":"note","risk_note":"risk"},"coo":{"headline":"headline","key_message":"2-3 sentences","metrics":[{"label":"l","value":"v","context":"c"}],"process_changes":["c1","c2","c3"],"headcount_impact":"impact","complexity":"Low or Medium or High"},"cto":{"headline":"headline","key_message":"2-3 sentences","metrics":[{"label":"l","value":"v","context":"c"}],"tech_requirements":["r1","r2","r3"],"integration_note":"note","build_buy":"recommendation","risks":["r1","r2"]},"cmo":{"headline":"headline","key_message":"2-3 sentences","metrics":[{"label":"l","value":"v","context":"c"}],"customer_impact":"impact","revenue_attribution":"attribution"},"domain_expert":{"headline":"headline","key_message":"2-3 sentences","metrics":[{"label":"l","value":"v","context":"c"}],"compliance_impact":"compliance","professional_note":"note"}},"roadmap":[{"phase":"Phase 1","duration":"timeframe","title":"name","actions":["a1","a2"],"milestone":"indicator"}]}`;
 
     const result=await callAPI('structure',sp);
     RSLT=result;
@@ -761,141 +664,136 @@ Return a single JSON object (no other text):
   }catch(err){
     console.error(err);show('wizard');setS(4);
     const e=document.getElementById('erbox');e.style.display='block';
-    e.textContent='Error: '+err.message+(err.message.includes('key')||err.message.includes('401')?' — Check GEMINI_API_KEY in Vercel → Settings → Environment Variables.':'. Please try again.');
+    e.textContent='Error: '+err.message+(err.message.includes('key')||err.message.includes('401')?' — Check GEMINI_API_KEY in Vercel Settings → Environment Variables.':'. Please try again.');
   }
 }
 
-// ── Quick wins tracker ──
 let qwDone=new Set();
-function toggleQW(idx){
-  qwDone.has(idx)?qwDone.delete(idx):qwDone.add(idx);
-  document.querySelectorAll('.qw-chk').forEach((el,i)=>{el.classList.toggle('done',qwDone.has(i));el.textContent=qwDone.has(i)?'✓':'';});
-  const total=document.querySelectorAll('.qw-chk').length;
-  const done=qwDone.size;
-  document.querySelector('.qw-prog-fill').style.width=(done/total*100)+'%';
-  document.querySelector('.qw-prog-txt').textContent=done+' of '+total+' completed';
+function toggleQW(i){
+  qwDone.has(i)?qwDone.delete(i):qwDone.add(i);
+  document.querySelectorAll('.qwchk').forEach((el,j)=>{el.classList.toggle('done',qwDone.has(j));el.textContent=qwDone.has(j)?'✓':'';});
+  const total=document.querySelectorAll('.qwchk').length;
+  document.querySelector('.qw-prog-fill').style.width=(qwDone.size/total*100)+'%';
+  document.querySelector('.qw-prog-txt').textContent=qwDone.size+' of '+total+' completed';
 }
 
-// ── Maturity radar SVG ──
-function buildRadar(scores){
+function buildRadar(sc){
   const labels=['Digital readiness','Process maturity','Data & analytics','Talent capability','Risk & compliance','Financial health'];
   const keys=['digital_readiness','process_maturity','data_analytics','talent_capability','risk_compliance','financial_health'];
-  const vals=keys.map(k=>Math.min(10,Math.max(0,scores[k]||5)));
-  const cx=100,cy=100,r=80,n=6;
-  function pt(i,v,radius){const a=Math.PI*2*i/n-Math.PI/2;return[cx+radius*(v/10)*Math.cos(a),cy+radius*(v/10)*Math.sin(a)];}
-  function ptFull(i,radius){const a=Math.PI*2*i/n-Math.PI/2;return[cx+radius*Math.cos(a),cy+radius*Math.sin(a)];}
-  let grid='',shape='',dots='';
-  [2,4,6,8,10].forEach(g=>{
-    const pts=Array.from({length:n},(_,i)=>ptFull(i,r*g/10));
-    grid+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="rgba(79,70,229,.1)" stroke-width="0.5"/>`;
-  });
-  Array.from({length:n},(_,i)=>{const p=ptFull(i,r);grid+=`<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="rgba(79,70,229,.1)" stroke-width="0.5"/>`;});
-  const shapePts=vals.map((v,i)=>pt(i,v,r));
-  shape=`<polygon points="${shapePts.map(p=>p.join(',')).join(' ')}" fill="rgba(79,70,229,.18)" stroke="#4f46e5" stroke-width="1.5"/>`;
-  vals.forEach((v,i)=>{const p=pt(i,v,r);dots+=`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#4f46e5"/>`;});
-  const radarColors=['#4f46e5','#059669','#d97706','#7c3aed','#dc2626','#0891b2'];
-  const svg=`<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">${grid}${shape}${dots}</svg>`;
-  const legend=labels.map((l,i)=>`<div class="rl-item">
-    <div class="rl-dot" style="background:${radarColors[i]}"></div>
-    <div class="rl-name">${l}</div>
-    <div class="rl-bar"><div class="rl-fill" style="width:${vals[i]*10}%;background:${radarColors[i]}"></div></div>
-    <div class="rl-score">${vals[i]}/10</div>
-  </div>`).join('');
-  return`<div class="radar-svg-box">${svg}</div><div class="radar-legend">${legend}</div>`;
+  const colors=['#4f46e5','#065f46','#b45309','#5b21b6','#991b1b','#0e7490'];
+  const vals=keys.map(k=>Math.min(10,Math.max(0,sc[k]||5)));
+  const cx=90,cy=90,r=70,n=6;
+  const pt=(i,v,rad)=>{const a=Math.PI*2*i/n-Math.PI/2;return[cx+rad*(v/10)*Math.cos(a),cy+rad*(v/10)*Math.sin(a)];};
+  const ptF=(i,rad)=>{const a=Math.PI*2*i/n-Math.PI/2;return[cx+rad*Math.cos(a),cy+rad*Math.sin(a)];};
+  let svg='<svg width="180" height="180" viewBox="0 0 180 180">';
+  [2,4,6,8,10].forEach(g=>{const pts=Array.from({length:n},(_,i)=>ptF(i,r*g/10));svg+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#e8e8f4" stroke-width="0.5"/>`;});
+  Array.from({length:n},(_,i)=>{const p=ptF(i,r);svg+=`<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="#e8e8f4" stroke-width="0.5"/>`;});
+  const shPts=vals.map((v,i)=>pt(i,v,r));
+  svg+=`<polygon points="${shPts.map(p=>p.join(',')).join(' ')}" fill="rgba(79,70,229,.14)" stroke="#4f46e5" stroke-width="1.5"/>`;
+  vals.forEach((v,i)=>{const p=pt(i,v,r);svg+=`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="#4f46e5"/>`;});
+  svg+='</svg>';
+  const legend=`<div style="flex:1;display:flex;flex-direction:column;gap:0">${labels.map((l,i)=>`<div class="rl-item"><div class="rl-dot" style="background:${colors[i]}"></div><div class="rl-name">${l}</div><div class="rl-bar-wrap"><div class="rl-bar-fill" style="width:${vals[i]*10}%;background:${colors[i]}"></div></div><div class="rl-score">${vals[i]}/10</div></div>`).join('')}</div>`;
+  return`<div class="radar-svg-box">${svg}</div>${legend}`;
 }
 
-function bcl(t){return({'Technical':'btc','Operational':'bop','Non-Technical':'bnt','Environmental':'ben','Hybrid':'bhy'}[t]||'bin');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function bcl(t){return({'Technical':'hp-type','Operational':'hp-gr','Non-Technical':'hp-am','Environmental':'hp-tl','Hybrid':'hp-bud'}[t]||'hp-time');}
+function hpClass(t){const m={'Technical':'background:#dbeafe;color:#1e40af;border-color:#93c5fd','Operational':'background:#d1fae5;color:#065f46;border-color:#6ee7b7','Non-Technical':'background:#fef3c7;color:#92400e;border-color:#fcd34d','Environmental':'background:#ccfbf1;color:#134e4a;border-color:#5eead4','Hybrid':'background:#ede9fe;color:#5b21b6;border-color:#c4b5fd'};return m[t]||'background:#f0f0f8;color:#52526e;border-color:#d4d4e8';}
 
 function render(r,ind){
   document.getElementById('dmeta').textContent=`${ind.toUpperCase()} · ${D.bud} · ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}).toUpperCase()}`;
-  document.getElementById('sbadges').innerHTML=`<span class="bpill bin">${ind}</span><span class="bpill ${bcl(r.solution_type)}">${r.solution_type||'Hybrid'}</span><span class="bpill bin">${D.bud}</span><span class="bpill bin">${D.tline||'6–12 months'}</span>`;
+
+  // Hero badges
+  const bt=r.solution_type||'Hybrid';
+  document.getElementById('sbadges').innerHTML=`<span class="hpill hp-ind">${esc(ind)}</span><span class="hpill" style="${hpClass(bt)}">${esc(bt)}</span><span class="hpill hp-bud">${esc(D.bud)}</span><span class="hpill hp-time">${esc(D.tline||'6–12 months')}</span>`;
   document.getElementById('stitle').textContent=r.solution_title||'—';
   document.getElementById('sdiag').textContent=r.problem_diagnosis||'—';
-  document.getElementById('exec-summary-preview').textContent=(r.exec_summary||'').substring(0,160)+'…';
+  document.getElementById('exec-prev').textContent=(r.exec_summary||'').substring(0,180)+(r.exec_summary&&r.exec_summary.length>180?'…':'');
 
-  // Urgency score
+  // Urgency
   const us=r.urgency_score||50;
-  const ub=document.getElementById('urg-box');
-  const col=us>=75?'#991b1b':us>=50?'#92400e':'#065f46';
-  const lbl=us>=75?'Act Now':us>=50?'Act Soon':'Plan Ahead';
-  document.getElementById('urg-score').textContent=us;
-  document.getElementById('urg-score').style.color=col;
-  document.getElementById('urg-label').textContent=lbl;
-  document.getElementById('urg-label').style.color=col;
+  const uc=us>=75?'#991b1b':us>=50?'#92400e':'#065f46';
+  const ul=us>=75?'ACT NOW':us>=50?'ACT SOON':'PLAN AHEAD';
+  document.getElementById('urg-n').textContent=us;
+  document.getElementById('urg-n').style.color=uc;
+  document.getElementById('urg-lbl').textContent=ul;
+  document.getElementById('urg-lbl').style.color=uc;
   document.getElementById('urg-sub').textContent=r.urgency_reason||'';
 
-  // Industry signals
+  // Signals
   if((r.industry_signals||[]).length){
-    const sb=document.getElementById('signals-bar');sb.style.display='flex';
-    (r.industry_signals||[]).slice(0,3).forEach(s=>{
-      sb.innerHTML+=`<div class="sig-item"><span class="sig-dot"></span><span class="sig-text">${s}</span></div>`;
-    });
+    const sb=document.getElementById('sigbar');sb.style.display='flex';
+    const sl=document.getElementById('sig-list');
+    (r.industry_signals||[]).slice(0,3).forEach(s=>{sl.innerHTML+=`<div class="sig-item"><span class="sig-dot"></span><span class="sig-txt">${esc(s)}</span></div>`;});
   }
 
   // Proof cases
   let ph='';
-  (r.proof_cases||[]).slice(0,3).forEach((c)=>{
-    const cc=c.confidence==='verified'?'conf-v':c.confidence==='benchmark'?'conf-b':'conf-e';
-    const cl=c.confidence==='verified'?'✓ Verified source':c.confidence==='benchmark'?'~ Industry benchmark':'⚠ Estimated';
+  (r.proof_cases||[]).slice(0,3).forEach(c=>{
+    const cc=c.confidence==='verified'?'cbv':c.confidence==='benchmark'?'cbb':'cbe';
+    const cl=c.confidence==='verified'?'✓ Verified':c.confidence==='benchmark'?'~ Benchmark':'⚠ Estimated';
     ph+=`<div class="proofbox">
-      <div class="pco-row"><span class="pco">${c.company}</span><span class="conf-badge ${cc}">${cl}</span><span style="color:var(--tx3);font-size:11px;margin-left:auto">${c.year} · ${c.industry}</span></div>
-      <div class="pmeta">via ${c.vendor}</div>
-      <div class="ptxt"><strong style="color:var(--tx)">Before:</strong> ${c.situation_before}<br><strong style="color:var(--tx)">Implemented:</strong> ${c.solution_implemented}</div>
+      <div class="pco-row"><span class="pco">${esc(c.company)}</span><span class="cbadge ${cc}">${cl}</span></div>
+      <div class="pmeta">${esc(c.year)} · ${esc(c.industry)} · via ${esc(c.vendor)}</div>
+      <div class="ptxt"><strong>Before:</strong> ${esc(c.situation_before)}</div>
+      <div class="ptxt" style="margin-top:3px"><strong>Implemented:</strong> ${esc(c.solution_implemented)}</div>
       <div class="pnums">
-        <div class="pnum"><div class="pnv">${c.roi}</div><div class="pnl">ROI / Payback</div></div>
-        <div class="pnum"><div class="pnv">${c.timeframe}</div><div class="pnl">Time to result</div></div>
-        <div class="pnum"><div class="pnv">${c.investment}</div><div class="pnl">Investment</div></div>
+        <div><div class="pnv">${esc(c.roi)}</div><div class="pnl">ROI / Payback</div></div>
+        <div><div class="pnv">${esc(c.timeframe)}</div><div class="pnl">Time to result</div></div>
+        <div><div class="pnv">${esc(c.investment)}</div><div class="pnl">Investment</div></div>
       </div>
-      ${c.key_lesson?`<div class="pkey"><strong style="color:var(--ac)">Key lesson:</strong> ${c.key_lesson}</div>`:''}
+      ${c.key_lesson?`<div class="pkey"><strong style="color:var(--acb)">Key lesson:</strong> ${esc(c.key_lesson)}</div>`:''}
     </div>`;
   });
-  document.getElementById('proofwrap').innerHTML=ph||'<p style="color:var(--tx3);font-size:13px;font-style:italic">No verified case studies found — try a more specific challenge description.</p>';
+  document.getElementById('proofwrap').innerHTML=ph||'<p style="color:var(--tx4);font-size:13px;font-style:italic">No verified cases found — try a more specific challenge description.</p>';
 
   // Comparison table
-  let ct='<table class="ctbl"><thead><tr><th>Metric</th><th>Industry avg.</th><th style="color:var(--rd)">Before</th><th style="color:var(--gr)">After</th><th>Top performer</th></tr></thead><tbody>';
-  (r.comparison_table||[]).forEach(row=>{ct+=`<tr><td><strong>${row.metric}</strong></td><td>${row.industry_average||'—'}</td><td class="td-r">${row.case1_before||'—'}</td><td class="td-g">${row.case1_after||'—'}</td><td class="td-g">${row.top_performer||'—'}</td></tr>`;});
+  let ct='<table class="ctbl"><thead><tr><th>Metric</th><th>Industry avg.</th><th>Before</th><th>After</th><th>Top performer</th></tr></thead><tbody>';
+  (r.comparison_table||[]).forEach(row=>{ct+=`<tr><td><strong>${esc(row.metric)}</strong></td><td>${esc(row.industry_average||'—')}</td><td class="tdr">${esc(row.case1_before||'—')}</td><td class="tdg">${esc(row.case1_after||'—')}</td><td class="tdg">${esc(row.top_performer||'—')}</td></tr>`;});
   ct+='</tbody></table>';
   document.getElementById('comptablewrap').innerHTML=ct;
 
   // Budget
   const b=r.budget||{};
   document.getElementById('budwrap').innerHTML=`
-    <div class="brow"><span class="bk">Investment range</span><span class="bv">${b.total_min} – ${b.total_max}</span></div>
-    <div class="brow"><span class="bk">CapEx portion</span><span class="bv">${b.capex_portion||'—'}</span></div>
-    <div class="brow"><span class="bk">Annual OpEx</span><span class="bv">${b.opex_annual||'—'}</span></div>
-    <div class="brow"><span class="bk">Payback period</span><span class="bv">${b.payback_months} months</span></div>
-    <div class="brow"><span class="bk">3-Year NPV</span><span class="bv">${b.npv_3yr||'—'}</span></div>
-    <div class="brow"><span class="bk">IRR</span><span class="bv">${b.irr||'—'}</span></div>
-    <div class="brow"><span class="bk">Phase 1</span><span class="bv" style="font-size:12px">${b.phase1_cost} — ${b.phase1_desc||''}</span></div>
-    <div class="brow"><span class="bk">Phase 2</span><span class="bv" style="font-size:12px">${b.phase2_cost} — ${b.phase2_desc||''}</span></div>
-    <div class="fnote">${b.financing_note||''}</div>`;
+    <div class="brow"><span class="bk">Investment range</span><span class="bv">${esc(b.total_min)} – ${esc(b.total_max)}</span></div>
+    <div class="brow"><span class="bk">CapEx portion</span><span class="bv">${esc(b.capex_portion||'—')}</span></div>
+    <div class="brow"><span class="bk">Annual OpEx</span><span class="bv">${esc(b.opex_annual||'—')}</span></div>
+    <div class="brow"><span class="bk">Payback period</span><span class="bv">${esc(String(b.payback_months))} months</span></div>
+    <div class="brow"><span class="bk">3-Year NPV</span><span class="bv">${esc(b.npv_3yr||'—')}</span></div>
+    <div class="brow"><span class="bk">IRR</span><span class="bv">${esc(b.irr||'—')}</span></div>
+    <div class="brow"><span class="bk">Phase 1</span><span class="bv" style="font-size:12px">${esc(b.phase1_cost)} — ${esc(b.phase1_desc||'')}</span></div>
+    <div class="brow"><span class="bk">Phase 2</span><span class="bv" style="font-size:12px">${esc(b.phase2_cost)} — ${esc(b.phase2_desc||'')}</span></div>
+    <div class="fnote">${esc(b.financing_note||'')}</div>`;
 
   // KPIs
   let kh='';
-  (r.kpis||[]).slice(0,6).forEach(k=>{kh+=`<div class="krow"><div class="karr">↑</div><div style="flex:1"><div class="kn">${k.name}</div><div class="kd">${k.before} → <strong style="color:var(--gr)">${k.after}</strong> ${k.unit} · Top: ${k.benchmark}</div></div></div>`;});
+  (r.kpis||[]).slice(0,6).forEach(k=>{kh+=`<div class="krow"><div class="karr">↑</div><div><div class="kn">${esc(k.name)}</div><div class="kd">${esc(k.before)} → <strong style="color:var(--gr)">${esc(k.after)}</strong> ${esc(k.unit)} · Top: ${esc(k.benchmark)}</div></div></div>`;});
   document.getElementById('kpiwrap').innerHTML=kh;
 
   // Competitors
   let ch='';
-  (r.competitor_benchmark||[]).slice(0,5).forEach((c,i)=>{const sc=c.status==='deployed'?'sp-d':c.status==='exploring'?'sp-e':'sp-b';ch+=`<div class="crow"><div style="font-size:11px;color:var(--tx3);width:20px;font-weight:700">#${i+1}</div><div style="flex:1"><div class="cn">${c.name}</div><div class="cd">${c.detail}</div></div><span class="spill ${sc}">${c.status}</span></div>`;});
+  (r.competitor_benchmark||[]).slice(0,5).forEach((c,i)=>{const sc=c.status==='deployed'?'sp-d':c.status==='exploring'?'sp-e':'sp-b';ch+=`<div class="crow"><div style="font-size:10px;color:var(--tx4);width:18px;font-weight:700;flex-shrink:0">#${i+1}</div><div style="flex:1;min-width:0"><div class="cn">${esc(c.name)}</div><div class="cd">${esc(c.detail)}</div></div><span class="spill ${sc}" style="flex-shrink:0">${esc(c.status)}</span></div>`;});
   document.getElementById('compwrap').innerHTML=ch;
 
-  // Maturity radar
+  // Radar
   document.getElementById('radarwrap').innerHTML=buildRadar(r.maturity_scores||{});
 
-  // Quick wins with action tracker
-  let qh=`<div class="qw-progress"><div class="qw-prog-bar"><div class="qw-prog-fill" style="width:0%"></div></div><span class="qw-prog-txt">0 of ${(r.quick_wins||[]).slice(0,5).length} completed</span></div>`;
-  (r.quick_wins||[]).slice(0,5).forEach((q,i)=>{qh+=`<div class="qwbox"><div class="qw-chk" onclick="toggleQW(${i})"></div><div style="flex:1"><div class="qw-action">${q.action}</div><div class="qw-meta">Cost: ${q.cost} · ${q.timeline} · Owner: ${q.who_owns||'TBD'}</div><div class="qw-impact">→ ${q.expected_impact}</div></div></div>`;});
+  // Quick wins
+  const qwTotal=(r.quick_wins||[]).slice(0,5).length;
+  let qh=`<div class="qw-prog-row"><div class="qw-prog-bar"><div class="qw-prog-fill" style="width:0%"></div></div><span class="qw-prog-txt">0 of ${qwTotal} completed</span></div>`;
+  (r.quick_wins||[]).slice(0,5).forEach((q,i)=>{qh+=`<div class="qwbox"><div class="qwchk" onclick="toggleQW(${i})"></div><div style="flex:1;min-width:0"><div class="qw-action">${esc(q.action)}</div><div class="qw-meta">Cost: ${esc(q.cost)} · ${esc(q.timeline)} · Owner: ${esc(q.who_owns||'TBD')}</div><div class="qw-impact">→ ${esc(q.expected_impact)}</div></div></div>`;});
   document.getElementById('qwwrap').innerHTML=qh;
 
-  // Tech recommendations
+  // Tech
   let th='';
-  (r.tech_recommendations||[]).slice(0,4).forEach(t=>{th+=`<div class="techbox"><div class="tech-cat">${t.category}</div><div class="tech-name">${t.vendor} — ${t.product}</div><div class="tech-why">${t.why_fits}</div><div style="font-size:12px;color:var(--tx2);margin-bottom:4px"><strong style="color:var(--tx)">Compatibility:</strong> ${t.compatibility||'—'}</div><div class="tech-price">Est. cost: ${t.price_range}</div><div class="tech-alts">Alternatives: ${(t.alternatives||[]).join(' · ')}</div></div>`;});
-  document.getElementById('techwrap').innerHTML=th||'<p style="color:var(--tx3);font-size:13px">No tech recommendations generated.</p>';
+  (r.tech_recommendations||[]).slice(0,4).forEach(t=>{th+=`<div class="techbox"><div class="tech-cat">${esc(t.category)}</div><div class="tech-nm">${esc(t.vendor)} — ${esc(t.product)}</div><div class="tech-why">${esc(t.why_fits)}</div><div style="font-size:12px;color:var(--tx2);margin-bottom:4px"><strong style="color:var(--tx)">Compatibility:</strong> ${esc(t.compatibility||'—')}</div><div class="tech-price">Est. cost: ${esc(t.price_range)}</div><div class="tech-alts">Alternatives: ${(t.alternatives||[]).map(a=>esc(a)).join(' · ')}</div></div>`;});
+  document.getElementById('techwrap').innerHTML=th||'<p style="color:var(--tx4);font-size:13px">No tech recommendations generated.</p>';
 
-  // Risk matrix
+  // Risk
   let rh='';
-  (r.risk_matrix||[]).slice(0,5).forEach(risk=>{const pc=risk.probability==='High'?'rb-h':risk.probability==='Medium'?'rb-m':'rb-l';const ic=risk.impact==='High'?'rb-h':risk.impact==='Medium'?'rb-m':'rb-l';rh+=`<div class="riskbox"><div class="risk-badges"><span class="rbadge ${pc}">P: ${risk.probability}</span><span class="rbadge ${ic}">I: ${risk.impact}</span></div><div style="flex:1"><div class="risk-title">${risk.risk}</div><div class="risk-mit"><strong style="color:var(--tx)">Mitigation:</strong> ${risk.mitigation}</div>${risk.owner?`<div class="risk-owner">Owner: ${risk.owner}</div>`:''}</div></div>`;});
+  (r.risk_matrix||[]).slice(0,5).forEach(risk=>{const pc=risk.probability==='High'?'rb-h':risk.probability==='Medium'?'rb-m':'rb-l';const ic=risk.impact==='High'?'rb-h':risk.impact==='Medium'?'rb-m':'rb-l';rh+=`<div class="riskbox"><div class="rbadges"><span class="rbadge ${pc}">P: ${esc(risk.probability)}</span><span class="rbadge ${ic}">I: ${esc(risk.impact)}</span></div><div style="flex:1;min-width:0"><div class="risk-title">${esc(risk.risk)}</div><div class="risk-mit"><strong style="color:var(--tx)">Mitigation:</strong> ${esc(risk.mitigation)}</div>${risk.owner?`<div class="risk-owner">Owner: ${esc(risk.owner)}</div>`:''}</div></div>`;});
   document.getElementById('riskwrap').innerHTML=rh;
 
   // Personas
@@ -904,46 +802,48 @@ function render(r,ind){
   ps.forEach((p,i)=>{
     const pd=(r.personas||{})[p.k];if(!pd)return;
     tabs+=`<div class="ptab${i===0?' active':''}" id="ptab-${p.k}" onclick="swP('${p.k}')">${p.l}</div>`;
-    let mx='';(pd.metrics||[]).slice(0,3).forEach(m=>{mx+=`<div class="mbox"><div class="mlbl">${m.label}</div><div class="mv">${m.value}</div><div class="mc">${m.context||''}</div></div>`;});
+    let mx='';(pd.metrics||[]).slice(0,3).forEach(m=>{mx+=`<div class="mbox"><div class="mlbl">${esc(m.label)}</div><div class="mv">${esc(m.value)}</div><div class="mc">${esc(m.context||'')}</div></div>`;});
     let ex='';
-    if(p.k==='cfo'){ex+=`<div style="margin-top:12px"><div class="fl" style="margin-bottom:7px">Financing options</div><div class="dpills">${(pd.financing_options||[]).map(f=>`<span class="dpill">${f}</span>`).join('')}</div></div>`;if(pd.tax_note)ex+=`<div class="ib"><strong>Tax / depreciation:</strong> ${pd.tax_note}</div>`;if(pd.risk_note)ex+=`<div class="wb2"><strong>Financial risk of delay:</strong> ${pd.risk_note}</div>`;}
-    if(p.k==='coo'){ex+=`<div style="margin-top:12px"><div class="fl" style="margin-bottom:7px">Process changes required</div><ul class="lp">${(pd.process_changes||[]).map(c=>`<li>${c}</li>`).join('')}</ul></div>`;ex+=`<div style="display:flex;gap:10px;margin-top:10px"><div class="ib" style="flex:1"><strong>Workforce impact:</strong> ${pd.headcount_impact||'—'}</div><div class="ib" style="min-width:100px;text-align:center"><div style="font-size:10px;color:var(--tx3);margin-bottom:3px;font-weight:700">Complexity</div><div style="font-size:16px;font-weight:700;color:${pd.complexity==='Low'?'var(--gr)':pd.complexity==='High'?'var(--rd)':'var(--am)'}">${pd.complexity}</div></div></div>`;}
-    if(p.k==='cto'){ex+=`<div style="margin-top:12px"><div class="fl" style="margin-bottom:7px">Technical requirements</div><ul class="lp">${(pd.tech_requirements||[]).map(c=>`<li>${c}</li>`).join('')}</ul></div>`;ex+=`<div class="ib"><strong>Build vs Buy:</strong> ${pd.build_buy||'—'}</div>`;if(pd.integration_note)ex+=`<div class="ib" style="margin-top:7px"><strong>Integration:</strong> ${pd.integration_note}</div>`;if((pd.risks||[]).length)ex+=`<div class="wb2"><strong>Technical risks:</strong> ${pd.risks.join(' · ')}</div>`;}
-    if(p.k==='cmo'){if(pd.customer_impact)ex+=`<div class="ib"><strong>Customer impact:</strong> ${pd.customer_impact}</div>`;if(pd.revenue_attribution)ex+=`<div class="ib" style="margin-top:7px"><strong>Revenue attribution:</strong> ${pd.revenue_attribution}</div>`;}
-    if(p.k==='domain_expert'){if(pd.compliance_impact)ex+=`<div class="ib"><strong>Compliance:</strong> ${pd.compliance_impact}</div>`;if(pd.professional_note)ex+=`<div class="wb2"><strong>Expert sign-off note:</strong> ${pd.professional_note}</div>`;}
-    const bn=(p.k==='ceo'&&pd.board_narrative)?`<div class="ib" style="margin-top:10px;font-style:italic;border-left:3px solid var(--ac);border-radius:0 var(--rs) var(--rs) 0">"${pd.board_narrative}"</div>`:'';
-    const ri=(p.k==='ceo'&&pd.risk_of_inaction)?`<div class="wb2"><strong>Risk of inaction:</strong> ${pd.risk_of_inaction}</div>`:'';
-    panels+=`<div class="ppanel${i===0?' active':''}" id="ppanel-${p.k}"><div class="phero"><div class="prole">${p.l} VIEW</div><div class="phl">${pd.headline||'—'}</div><div class="pmsg">${pd.key_message||'—'}</div><div class="mr">${mx}</div></div>${ex}${bn}${ri}</div>`;
+    if(p.k==='cfo'){ex+=`<div style="margin-top:11px"><div class="fl" style="margin-bottom:6px">Financing options</div><div class="dpills">${(pd.financing_options||[]).map(f=>`<span class="dpill">${esc(f)}</span>`).join('')}</div></div>`;if(pd.tax_note)ex+=`<div class="ib"><strong>Tax / depreciation:</strong> ${esc(pd.tax_note)}</div>`;if(pd.risk_note)ex+=`<div class="wbox"><strong>Financial risk of delay:</strong> ${esc(pd.risk_note)}</div>`;}
+    if(p.k==='coo'){ex+=`<div style="margin-top:11px"><div class="fl" style="margin-bottom:6px">Process changes required</div><ul class="lp">${(pd.process_changes||[]).map(c=>`<li>${esc(c)}</li>`).join('')}</ul></div><div style="display:flex;gap:9px;margin-top:9px"><div class="ib" style="flex:1"><strong>Workforce:</strong> ${esc(pd.headcount_impact||'—')}</div><div class="ib" style="min-width:90px;text-align:center"><div style="font-size:9px;color:var(--tx4);margin-bottom:2px;font-weight:700">Complexity</div><div style="font-size:15px;font-weight:700;color:${pd.complexity==='Low'?'var(--gr)':pd.complexity==='High'?'var(--rd)':'var(--am)'}">${esc(pd.complexity||'—')}</div></div></div>`;}
+    if(p.k==='cto'){ex+=`<div style="margin-top:11px"><div class="fl" style="margin-bottom:6px">Technical requirements</div><ul class="lp">${(pd.tech_requirements||[]).map(c=>`<li>${esc(c)}</li>`).join('')}</ul></div><div class="ib"><strong>Build vs Buy:</strong> ${esc(pd.build_buy||'—')}</div>`;if(pd.integration_note)ex+=`<div class="ib" style="margin-top:7px"><strong>Integration:</strong> ${esc(pd.integration_note)}</div>`;if((pd.risks||[]).length)ex+=`<div class="wbox"><strong>Technical risks:</strong> ${pd.risks.map(r=>esc(r)).join(' · ')}</div>`;}
+    if(p.k==='cmo'){if(pd.customer_impact)ex+=`<div class="ib"><strong>Customer impact:</strong> ${esc(pd.customer_impact)}</div>`;if(pd.revenue_attribution)ex+=`<div class="ib" style="margin-top:7px"><strong>Revenue attribution:</strong> ${esc(pd.revenue_attribution)}</div>`;}
+    if(p.k==='domain_expert'){if(pd.compliance_impact)ex+=`<div class="ib"><strong>Compliance:</strong> ${esc(pd.compliance_impact)}</div>`;if(pd.professional_note)ex+=`<div class="wbox"><strong>Expert sign-off note:</strong> ${esc(pd.professional_note)}</div>`;}
+    const bn=(p.k==='ceo'&&pd.board_narrative)?`<div class="ib" style="margin-top:9px;font-style:italic;border-left:3px solid var(--acb);border-radius:0 6px 6px 0">"${esc(pd.board_narrative)}"</div>`:'';
+    const ri=(p.k==='ceo'&&pd.risk_of_inaction)?`<div class="wbox"><strong>Risk of inaction:</strong> ${esc(pd.risk_of_inaction)}</div>`:'';
+    panels+=`<div class="ppanel${i===0?' active':''}" id="ppanel-${p.k}"><div class="phero"><div class="prole">${p.l} VIEW</div><div class="phl">${esc(pd.headline||'—')}</div><div class="pmsg">${esc(pd.key_message||'—')}</div><div class="mr">${mx}</div></div>${ex}${bn}${ri}</div>`;
   });
   document.getElementById('ptabs').innerHTML=tabs;
   document.getElementById('ppanels').innerHTML=panels;
 
   // Roadmap
   let rmh='';
-  (r.roadmap||[]).forEach(p=>{rmh+=`<div class="rphase"><div class="rl"><div class="rdot"></div><div class="rline"></div></div><div class="rcont"><div class="rpl">${p.phase} · ${p.duration}</div><div class="rti">${p.title}</div><div class="ra">${(p.actions||[]).join(' · ')}</div><span class="rmil">✓ ${p.milestone}</span></div></div>`;});
+  (r.roadmap||[]).forEach(p=>{rmh+=`<div class="rphase"><div class="rl"><div class="rdot"></div><div class="rline"></div></div><div class="rcont"><div class="rpl">${esc(p.phase)} · ${esc(p.duration)}</div><div class="rti">${esc(p.title)}</div><div class="ra">${(p.actions||[]).map(a=>esc(a)).join(' · ')}</div><span class="rmil">✓ ${esc(p.milestone)}</span></div></div>`;});
   document.getElementById('rmwrap').innerHTML=rmh;
 
-  // Citations — prominent dark card with real URLs
+  // Citations — extract clean domain from URL
   if(SRCS.length){
     const cc=document.getElementById('cit-card');cc.style.display='block';
     let cl='';
     SRCS.forEach((s,i)=>{
-      let domain='';try{domain=new URL(s.url).hostname.replace('www.','');}catch(e){}
-      cl+=`<div class="cit-item">
-        <div class="cit-num">[${i+1}]</div>
-        <div class="cit-body">
-          <div class="cit-title">${s.title||domain}</div>
-          <a class="cit-url" href="${s.url}" target="_blank" rel="noopener noreferrer">${s.url}</a>
-          ${domain?`<span class="cit-domain">${domain}</span>`:''}
-        </div>
-      </div>`;
+      let domain='';
+      try{
+        const u=new URL(s.url);
+        // Decode Google grounding redirect if present
+        if(u.hostname.includes('vertexaisearch')||u.hostname.includes('googleapis')){
+          domain='Google Search source';
+        } else {
+          domain=u.hostname.replace(/^www\./,'');
+        }
+      }catch(e){domain='Source';}
+      const dispUrl=s.url.length>70?s.url.substring(0,70)+'…':s.url;
+      cl+=`<div class="cit-item"><div class="cit-n">[${i+1}]</div><div class="cit-body"><div class="cit-title">${esc(s.title||domain)}</div><span class="cit-domain">${esc(domain)}</span><a class="cit-url" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer" title="${esc(s.url)}">${esc(dispUrl)}</a></div></div>`;
     });
     document.getElementById('cit-list').innerHTML=cl;
   }
   if(QRS.length){
-    const cq=document.getElementById('cit-queries');cq.style.display='block';
-    const chips=document.getElementById('cit-chips');
-    QRS.slice(0,8).forEach(q=>{const c=document.createElement('span');c.className='cit-chip';c.textContent=q;chips.appendChild(c);});
+    const cq=document.getElementById('cit-q');cq.style.display='block';
+    QRS.slice(0,8).forEach(q=>{const c=document.createElement('span');c.className='cit-chip';c.textContent=q;document.getElementById('cit-chips').appendChild(c);});
   }
 
   show('dashboard');
@@ -956,31 +856,229 @@ function swP(k){
   if(t)t.classList.add('active');if(p)p.classList.add('active');
 }
 
-function copyExecSummary(){
+function copyExec(){
   if(!RSLT)return;
   const ind=D.ind==='Other'?(document.getElementById('otherI')?.value||'Other'):D.ind;
-  const txt=`OptiCore Enterprise Analysis — ${ind} (${D.bud} budget)\n\n${RSLT.exec_summary||''}\n\nRecommended solution: ${RSLT.solution_title||''}\nType: ${RSLT.solution_type||''}\nUrgency score: ${RSLT.urgency_score||'—'}/100\n\n${RSLT.problem_diagnosis||''}\n\nPayback: ${(RSLT.budget||{}).payback_months||'—'} months · NPV: ${(RSLT.budget||{}).npv_3yr||'—'} · IRR: ${(RSLT.budget||{}).irr||'—'}\n\nGenerated by OptiCore — Enterprise Intelligence Platform`;
+  const b=RSLT.budget||{};
+  const txt=`OptiCore Enterprise Intelligence Report
+${ind} · ${D.bud} budget · ${new Date().toLocaleDateString()}
+
+RECOMMENDED SOLUTION
+${RSLT.solution_title||'—'} (${RSLT.solution_type||'—'})
+Urgency: ${RSLT.urgency_score||'—'}/100 — ${RSLT.urgency_reason||'—'}
+
+EXECUTIVE SUMMARY
+${RSLT.exec_summary||'—'}
+
+FINANCIAL OVERVIEW
+Investment: ${b.total_min||'—'} – ${b.total_max||'—'}
+Payback: ${b.payback_months||'—'} months · 3-Year NPV: ${b.npv_3yr||'—'} · IRR: ${b.irr||'—'}
+Phase 1: ${b.phase1_cost||'—'} · Phase 2: ${b.phase2_cost||'—'}
+
+Generated by OptiCore — Enterprise Intelligence Platform`;
   navigator.clipboard.writeText(txt).then(()=>{
-    const t=document.getElementById('copy-toast');t.style.opacity=1;setTimeout(()=>t.style.opacity=0,2000);
+    const t=document.getElementById('copy-toast');t.style.opacity=1;setTimeout(()=>t.style.opacity=0,2200);
   });
 }
 
+// ── PDF: clean A4 executive report (not a web screenshot) ──
 function dlPDF(){
-  const btn=document.querySelector('.btn-green');const orig=btn.innerHTML;btn.innerHTML='⏳ Generating…';btn.disabled=true;
-  document.querySelectorAll('.ppanel').forEach(p=>p.style.display='block');
-  document.querySelector('.ptabs').style.display='none';
-  const ind=(D.ind==='Other'?(document.getElementById('otherI')?.value||'other'):D.ind).toLowerCase().replace(/\s+/g,'-');
+  if(!RSLT){alert('No analysis to export.');return;}
+  const btn=document.querySelector('.btn-gr');btn.textContent='⏳ Building…';btn.disabled=true;
+  const r=RSLT;
+  const ind=D.ind==='Other'?(document.getElementById('otherI')?.value||'Other'):D.ind;
+  const us=r.urgency_score||50;
+  const uc=us>=75?'#991b1b':us>=50?'#92400e':'#065f46';
+  const ul=us>=75?'ACT NOW':us>=50?'ACT SOON':'PLAN AHEAD';
+  const b=r.budget||{};
+  const E=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const roleName={ceo:'CEO',cfo:'CFO',coo:'COO',cto:'CTO',cmo:'CMO',domain_expert:'Domain Expert'};
+
+  const pdfHTML=`<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;color:#0b0b18;background:#fff;font-size:10pt;line-height:1.6;}
+.page{padding:18mm 20mm;page-break-after:always;}
+.page:last-child{page-break-after:auto;}
+h1{font-family:'DM Serif Display',serif;font-size:22pt;line-height:1.15;margin-bottom:8pt;}
+h2{font-size:12pt;font-weight:700;color:#312e81;border-bottom:2pt solid #312e81;padding-bottom:5pt;margin:16pt 0 10pt;}
+h3{font-size:10.5pt;font-weight:700;margin-bottom:5pt;}
+p{font-size:10pt;color:#1e1e38;line-height:1.7;margin-bottom:8pt;}
+.eyebrow{font-size:8.5pt;text-transform:uppercase;letter-spacing:2pt;color:#4f46e5;font-weight:700;margin-bottom:5pt;}
+.cover-meta{font-size:11pt;color:#52526e;margin:4pt 0;}
+table{width:100%;border-collapse:collapse;margin-bottom:14pt;font-size:9.5pt;}
+th{background:#f0f0fa;color:#312e81;font-weight:700;font-size:8.5pt;text-transform:uppercase;letter-spacing:.5pt;padding:7pt 10pt;text-align:left;border-bottom:1.5pt solid #312e81;}
+td{padding:7pt 10pt;border-bottom:.5pt solid #ebebf4;vertical-align:top;color:#1e1e38;line-height:1.5;}
+tr:last-child td{border-bottom:none;}
+.proof-box{border-left:3pt solid #4f46e5;padding:9pt 13pt;margin-bottom:10pt;background:#f8f8ff;page-break-inside:avoid;}
+.proof-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4pt;}
+.proof-company{font-size:11.5pt;font-weight:700;}
+.proof-badge{font-size:8.5pt;font-weight:700;padding:2pt 7pt;border-radius:3pt;}
+.bv{background:#d1fae5;color:#065f46;}.bb{background:#fef3c7;color:#92400e;}.be{background:#fee2e2;color:#991b1b;}
+.stats-row{display:flex;gap:16pt;margin-top:8pt;}
+.stat-box{text-align:center;}
+.stat-n{font-family:'DM Serif Display',serif;font-size:15pt;color:#065f46;line-height:1;}
+.stat-l{font-size:7.5pt;color:#52526e;text-transform:uppercase;letter-spacing:.5pt;margin-top:2pt;}
+.key-lesson{font-size:9pt;color:#1e1e38;font-style:italic;margin-top:6pt;padding:5pt 8pt;background:#f0f0fa;border-radius:3pt;}
+.metric-row{display:flex;gap:10pt;margin:10pt 0;}
+.metric-box{flex:1;padding:9pt 11pt;background:#f5f5ff;border:1pt solid #e4e4f0;border-radius:5pt;}
+.metric-v{font-family:'DM Serif Display',serif;font-size:17pt;color:#312e81;line-height:1;margin-bottom:3pt;}
+.metric-l{font-size:8pt;text-transform:uppercase;letter-spacing:.5pt;color:#52526e;}
+.metric-c{font-size:8.5pt;color:#52526e;margin-top:2pt;}
+.badge{display:inline-block;padding:2pt 7pt;border-radius:3pt;font-size:8.5pt;font-weight:700;}
+.badge-h{background:#fee2e2;color:#991b1b;}.badge-m{background:#fef3c7;color:#92400e;}.badge-l{background:#d1fae5;color:#065f46;}
+.persona-box{border:1pt solid #e4e4f0;border-radius:5pt;padding:9pt 12pt;margin-bottom:9pt;page-break-inside:avoid;}
+.persona-role{font-size:8.5pt;text-transform:uppercase;letter-spacing:2pt;color:#4f46e5;font-weight:700;margin-bottom:3pt;}
+.persona-hl{font-family:'DM Serif Display',serif;font-size:13pt;margin-bottom:5pt;color:#0b0b18;}
+.persona-msg{font-size:9.5pt;color:#1e1e38;line-height:1.7;}
+.tdr{color:#991b1b;font-weight:600;}.tdg{color:#065f46;font-weight:700;}
+.section-label{font-size:8pt;text-transform:uppercase;letter-spacing:2pt;color:#52526e;margin-bottom:6pt;}
+.road-row{display:flex;gap:11pt;margin-bottom:9pt;page-break-inside:avoid;}
+.road-dot{width:9pt;height:9pt;border-radius:50%;background:#4f46e5;flex-shrink:0;margin-top:3pt;}
+.road-title{font-size:10.5pt;font-weight:700;color:#0b0b18;}
+.road-phase{font-size:8.5pt;text-transform:uppercase;letter-spacing:1pt;color:#4f46e5;font-weight:700;margin-bottom:2pt;}
+.road-actions{font-size:9.5pt;color:#1e1e38;line-height:1.65;}
+.road-mil{display:inline-block;background:#d1fae5;color:#065f46;font-size:8.5pt;font-weight:700;padding:2pt 9pt;border-radius:20pt;margin-top:5pt;}
+.signal-item{padding:6pt 10pt;border-left:2pt solid #4f46e5;margin-bottom:6pt;background:#f8f8ff;font-size:9.5pt;color:#1e1e38;}
+.src-item{padding:6pt 0;border-bottom:.5pt solid #ebebf4;font-size:9pt;}
+.src-num{color:#4f46e5;font-weight:700;margin-right:5pt;}
+.src-url{color:#1e40af;word-break:break-all;}
+.footer{position:fixed;bottom:8mm;left:20mm;right:20mm;display:flex;justify-content:space-between;font-size:7.5pt;color:#a0a0b8;border-top:.5pt solid #e4e4f0;padding-top:3pt;}
+</style>
+</head><body>
+
+<!-- COVER -->
+<div class="page" style="display:flex;flex-direction:column;min-height:220mm;">
+  <div style="display:flex;align-items:center;gap:8pt;margin-bottom:48pt;">
+    <div style="width:30pt;height:30pt;background:#4f46e5;border-radius:7pt;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12pt;line-height:1">OC</div>
+    <div style="font-family:'DM Serif Display',serif;font-size:17pt">Opti<span style="color:#4f46e5">Core</span> Enterprise Intelligence</div>
+  </div>
+  <div class="eyebrow">Confidential Enterprise Report</div>
+  <h1>${E(r.solution_title||'Enterprise Optimization Report')}</h1>
+  <p class="cover-meta">${E(ind)} · ${E(D.bud)} budget · ${E(D.geo||'Global')} · ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</p>
+  <p class="cover-meta">Solution type: ${E(r.solution_type||'Hybrid')} · Timeline: ${E(D.tline||'6–12 months')}</p>
+  <div style="display:flex;align-items:flex-start;gap:20pt;margin:18pt 0;padding:14pt 0;border-top:1pt solid #e4e4f0;border-bottom:1pt solid #e4e4f0;">
+    <div style="text-align:center;min-width:80pt;">
+      <div style="font-family:'DM Serif Display',serif;font-size:42pt;color:${uc};line-height:1">${us}</div>
+      <div style="font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:1.5pt;color:${uc};margin-top:3pt">${ul}</div>
+      <div style="font-size:8pt;color:#52526e;margin-top:3pt">Urgency score /100</div>
+    </div>
+    <div style="flex:1;font-size:11pt;color:#1e1e38;line-height:1.7;padding-left:16pt;border-left:1pt solid #e4e4f0">${E(r.urgency_reason||'')}${r.exec_summary?`<br><br>${E(r.exec_summary)}`:''}</div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-box"><div class="metric-v">${E(b.total_min||'—')}</div><div class="metric-l">Min investment</div></div>
+    <div class="metric-box"><div class="metric-v">${E(String(b.payback_months||'—'))} mo</div><div class="metric-l">Payback</div></div>
+    <div class="metric-box"><div class="metric-v">${E(b.npv_3yr||'—')}</div><div class="metric-l">3-Year NPV</div></div>
+    <div class="metric-box"><div class="metric-v">${E(b.irr||'—')}</div><div class="metric-l">IRR</div></div>
+  </div>
+  <div style="margin-top:auto;padding-top:12pt;border-top:.5pt solid #e4e4f0;display:flex;justify-content:space-between;font-size:8pt;color:#a0a0b8;">
+    <span>Confidential — OptiCore Enterprise Intelligence Platform</span>
+    <span>Generated ${new Date().toISOString().split('T')[0]}</span>
+  </div>
+</div>
+
+<!-- DIAGNOSIS + FINANCIAL -->
+<div class="page">
+  <div class="section-label">Section 1 — Problem Diagnosis & Financial Analysis</div>
+  <h2>Problem diagnosis</h2>
+  <p>${E(r.problem_diagnosis||'')}</p>
+  ${(r.industry_signals||[]).length?`<h2>Current market signals — why act now</h2>${(r.industry_signals||[]).map(s=>`<div class="signal-item">${E(s)}</div>`).join('')}`:''}
+  <h2>Financial breakdown</h2>
+  <table><tr><th>Item</th><th>Value</th><th>Notes</th></tr>
+    <tr><td>Investment range</td><td><strong>${E(b.total_min)} – ${E(b.total_max)}</strong></td><td>${E(b.capex_portion||'—')} CapEx</td></tr>
+    <tr><td>Annual OpEx</td><td>${E(b.opex_annual||'—')}</td><td>Ongoing after implementation</td></tr>
+    <tr><td>Payback period</td><td><strong style="color:#065f46">${E(String(b.payback_months))} months</strong></td><td>${E(b.irr||'—')} IRR</td></tr>
+    <tr><td>3-Year NPV</td><td><strong style="color:#065f46">${E(b.npv_3yr||'—')}</strong></td><td>Net present value</td></tr>
+    <tr><td>Phase 1</td><td>${E(b.phase1_cost||'—')}</td><td>${E(b.phase1_desc||'')}</td></tr>
+    <tr><td>Phase 2</td><td>${E(b.phase2_cost||'—')}</td><td>${E(b.phase2_desc||'')}</td></tr>
+    <tr><td colspan="3" style="color:#52526e;font-style:italic">${E(b.financing_note||'')}</td></tr>
+  </table>
+  ${(r.kpis||[]).length?`<h2>KPI targets</h2><table><tr><th>Metric</th><th>Current</th><th>Target</th><th>Unit</th><th>Top performer</th></tr>${(r.kpis||[]).map(k=>`<tr><td><strong>${E(k.name)}</strong></td><td>${E(k.before)}</td><td class="tdg">${E(k.after)}</td><td>${E(k.unit)}</td><td>${E(k.benchmark)}</td></tr>`).join('')}</table>`:''}
+</div>
+
+<!-- CASE STUDIES -->
+<div class="page">
+  <div class="section-label">Section 2 — Comparative Case Studies</div>
+  <h2>Companies that solved similar problems</h2>
+  ${(r.proof_cases||[]).slice(0,3).map(c=>`<div class="proof-box">
+    <div class="proof-hdr"><span class="proof-company">${E(c.company)}</span><span class="proof-badge ${c.confidence==='verified'?'bv':c.confidence==='benchmark'?'bb':'be'}">${c.confidence==='verified'?'✓ Verified':c.confidence==='benchmark'?'~ Benchmark':'⚠ Estimated'}</span></div>
+    <div style="font-size:8.5pt;color:#52526e;margin-bottom:5pt">${E(c.year)} · ${E(c.industry)} · via ${E(c.vendor)}</div>
+    <div style="font-size:9.5pt;color:#1e1e38"><strong>Before:</strong> ${E(c.situation_before)}</div>
+    <div style="font-size:9.5pt;color:#1e1e38;margin-top:2pt"><strong>Implemented:</strong> ${E(c.solution_implemented)}</div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-n">${E(c.roi)}</div><div class="stat-l">ROI / Payback</div></div>
+      <div class="stat-box"><div class="stat-n">${E(c.timeframe)}</div><div class="stat-l">Time to result</div></div>
+      <div class="stat-box"><div class="stat-n">${E(c.investment)}</div><div class="stat-l">Investment</div></div>
+    </div>
+    ${c.key_lesson?`<div class="key-lesson">${E(c.key_lesson)}</div>`:''}
+  </div>`).join('')}
+  ${(r.comparison_table||[]).length?`<h2>Before vs after — industry benchmarks</h2><table><tr><th>Metric</th><th>Industry avg.</th><th>Before</th><th>After</th><th>Top performer</th></tr>${(r.comparison_table||[]).map(row=>`<tr><td><strong>${E(row.metric)}</strong></td><td>${E(row.industry_average||'—')}</td><td class="tdr">${E(row.case1_before||'—')}</td><td class="tdg">${E(row.case1_after||'—')}</td><td class="tdg">${E(row.top_performer||'—')}</td></tr>`).join('')}</table>`:''}
+</div>
+
+<!-- MARKET INTELLIGENCE -->
+<div class="page">
+  <div class="section-label">Section 3 — Market & Competitive Intelligence</div>
+  ${(r.competitor_benchmark||[]).length?`<h2>Competitor landscape</h2><table><tr><th>#</th><th>Competitor</th><th>Status</th><th>Action taken</th></tr>${(r.competitor_benchmark||[]).map((c,i)=>`<tr><td>${i+1}</td><td><strong>${E(c.name)}</strong></td><td><span class="badge ${c.status==='deployed'?'badge-l':c.status==='exploring'?'badge-m':'badge-h'}">${E(c.status)}</span></td><td>${E(c.detail)}</td></tr>`).join('')}</table>`:''}
+  ${r.maturity_scores?`<h2>Digital maturity assessment</h2><table><tr><th>Dimension</th><th>Score</th><th>Assessment</th></tr>${Object.entries({digital_readiness:'Digital readiness',process_maturity:'Process maturity',data_analytics:'Data & analytics',talent_capability:'Talent capability',risk_compliance:'Risk & compliance',financial_health:'Financial health'}).map(([k,label])=>{const v=r.maturity_scores[k]||5;const a=v>=8?'Advanced':v>=6?'Developing':v>=4?'Emerging':'Early stage';return`<tr><td>${label}</td><td><strong style="color:#312e81">${v}/10</strong></td><td>${a}</td></tr>`;}).join('')}</table>`:''}
+</div>
+
+<!-- TECHNOLOGY & RISK -->
+<div class="page">
+  <div class="section-label">Section 4 — Technology & Risk</div>
+  ${(r.tech_recommendations||[]).length?`<h2>Recommended technology stack</h2><table><tr><th>Category</th><th>Vendor / Product</th><th>Est. cost</th><th>Why it fits</th><th>Alternatives</th></tr>${(r.tech_recommendations||[]).map(t=>`<tr><td><strong style="color:#4f46e5">${E(t.category)}</strong></td><td><strong>${E(t.vendor)}</strong><br><span style="font-size:8.5pt;color:#52526e">${E(t.product)}</span></td><td style="color:#065f46;font-weight:700;white-space:nowrap">${E(t.price_range)}</td><td>${E(t.why_fits)}</td><td style="font-size:8.5pt;color:#52526e">${(t.alternatives||[]).map(a=>E(a)).join(', ')}</td></tr>`).join('')}</table>`:''}
+  ${(r.risk_matrix||[]).length?`<h2>Risk matrix</h2><table><tr><th>Risk</th><th>Prob.</th><th>Impact</th><th>Mitigation strategy</th><th>Owner</th></tr>${(r.risk_matrix||[]).map(risk=>`<tr><td>${E(risk.risk)}</td><td><span class="badge ${risk.probability==='High'?'badge-h':risk.probability==='Medium'?'badge-m':'badge-l'}">${E(risk.probability)}</span></td><td><span class="badge ${risk.impact==='High'?'badge-h':risk.impact==='Medium'?'badge-m':'badge-l'}">${E(risk.impact)}</span></td><td>${E(risk.mitigation)}</td><td style="font-size:8.5pt;color:#52526e">${E(risk.owner||'—')}</td></tr>`).join('')}</table>`:''}
+</div>
+
+<!-- ACTION PLAN -->
+<div class="page">
+  <div class="section-label">Section 5 — Action Plan</div>
+  ${(r.quick_wins||[]).length?`<h2>Quick wins — 30 days, low/no cost</h2><table><tr><th>#</th><th>Action</th><th>Cost</th><th>Timeline</th><th>Expected impact</th><th>Owner</th></tr>${(r.quick_wins||[]).map((q,i)=>`<tr><td style="color:#4f46e5;font-weight:700">${i+1}</td><td><strong>${E(q.action)}</strong></td><td style="color:#065f46;font-weight:700">${E(q.cost)}</td><td>${E(q.timeline)}</td><td>${E(q.expected_impact)}</td><td style="font-size:8.5pt">${E(q.who_owns||'—')}</td></tr>`).join('')}</table>`:''}
+  ${(r.roadmap||[]).length?`<h2>Implementation roadmap</h2>${(r.roadmap||[]).map(p=>`<div class="road-row"><div class="road-dot"></div><div style="flex:1"><div class="road-phase">${E(p.phase)} · ${E(p.duration)}</div><div class="road-title">${E(p.title)}</div><div class="road-actions">${(p.actions||[]).map(a=>`• ${E(a)}`).join('<br>')}</div><span class="road-mil">✓ ${E(p.milestone)}</span></div></div>`).join('')}`:''}
+</div>
+
+<!-- EXECUTIVE PERSPECTIVES -->
+<div class="page">
+  <div class="section-label">Section 6 — Executive Perspectives</div>
+  <h2>Role-specific analysis</h2>
+  ${Object.entries(r.personas||{}).map(([role,pd])=>`<div class="persona-box">
+    <div class="persona-role">${roleName[role]||role}</div>
+    <div class="persona-hl">${E(pd.headline||'—')}</div>
+    <div class="persona-msg">${E(pd.key_message||'—')}</div>
+    ${(pd.metrics||[]).slice(0,3).map(m=>`<span style="display:inline-block;margin:4pt 5pt 0 0;padding:4pt 9pt;background:#f5f5ff;border-radius:3pt;font-size:9pt"><strong style="color:#4f46e5">${E(m.value)}</strong> ${E(m.label)}</span>`).join('')}
+  </div>`).join('')}
+</div>
+
+${SRCS.length?`<!-- SOURCES -->
+<div class="page">
+  <div class="section-label">Research Sources</div>
+  <h2>Web citations — live Google Search grounding</h2>
+  ${SRCS.map((s,i)=>{let domain='Source';try{const u=new URL(s.url);domain=u.hostname.includes('vertexaisearch')||u.hostname.includes('googleapis')?'Google Search source':u.hostname.replace(/^www\./,'');}catch(e){}return`<div class="src-item"><span class="src-num">[${i+1}]</span><strong>${E(s.title||domain)}</strong><br><span style="font-size:8pt;color:#52526e">${E(domain)}</span><br><span class="src-url">${E(s.url.length>100?s.url.substring(0,100)+'...':s.url)}</span></div>`;}).join('')}
+  ${QRS.length?`<div style="margin-top:14pt"><div style="font-size:8.5pt;font-weight:700;color:#52526e;margin-bottom:6pt;text-transform:uppercase;letter-spacing:.5pt">Google Search queries used:</div>${QRS.slice(0,8).map(q=>`<span style="display:inline-block;margin:3pt 4pt 0 0;padding:2pt 8pt;background:#f0f0f8;border-radius:3pt;font-size:8.5pt;color:#52526e">${E(q)}</span>`).join('')}</div>`:''}
+</div>`:''}
+
+<div class="footer"><span>OptiCore Enterprise Intelligence — Confidential</span><span>${E(ind)} · ${new Date().toLocaleDateString()}</span></div>
+</body></html>`;
+
+  // Create hidden div, render, and pdf
+  const hidden=document.createElement('div');
+  hidden.style.cssText='position:fixed;left:-9999px;top:0;width:210mm;background:#fff;';
+  hidden.innerHTML=pdfHTML;
+  document.body.appendChild(hidden);
+  const filename=`opticore-${ind.toLowerCase().replace(/[\s/&]/g,'-')}-${new Date().toISOString().split('T')[0]}.pdf`;
   html2pdf().set({
-    margin:[8,8,8,8],filename:`opticore-${ind}-${Date.now()}.pdf`,
-    image:{type:'jpeg',quality:0.93},
-    html2canvas:{scale:2,useCORS:true,logging:false,backgroundColor:'#f7f8ff'},
+    margin:0,filename,
+    image:{type:'jpeg',quality:0.95},
+    html2canvas:{scale:2,useCORS:true,logging:false,backgroundColor:'#ffffff'},
     jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-    pagebreak:{mode:['avoid-all','css','legacy']}
-  }).from(document.getElementById('pdf-content')).save().then(()=>{
-    btn.innerHTML=orig;btn.disabled=false;
-    document.querySelectorAll('.ppanel').forEach(p=>p.style.display='');
-    document.querySelector('.ptabs').style.display='';
-    const active=document.querySelector('.ptab.active');if(active)swP(active.id.replace('ptab-',''));
+    pagebreak:{mode:['css','legacy'],before:'.page'}
+  }).from(hidden.querySelector('body')).save().then(()=>{
+    document.body.removeChild(hidden);
+    btn.textContent='⬇ PDF Report';btn.disabled=false;
+  }).catch(()=>{
+    document.body.removeChild(hidden);
+    btn.textContent='⬇ PDF Report';btn.disabled=false;
   });
 }
 </script>
